@@ -1,0 +1,2257 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Reading Archive — Toko Buku Independen &amp; Bookstore Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-cream: #FAF5EC;
+      --bg-cream-dark: #EFE6D5;
+      --surface-ivory: #FFFDF8;
+      --border-sand: #DFD3BE;
+      --text-espresso: #3B2F2F;
+      --text-muted: #7A6B5D;
+      --accent-terracotta: #9E5A47;
+      --accent-terracotta-hover: #834737;
+      --accent-sage: #5E6F52;
+      --accent-gold: #C89F5D;
+      --admin-forest: #1B362B;
+      --admin-forest-hover: #254A3B;
+      --admin-mint: #EBF3EE;
+      --admin-mint-border: #C8DDD0;
+      --shadow-soft: 0 8px 24px rgba(59, 47, 47, 0.06);
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-cream);
+      color: var(--text-espresso);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    h1, h2, h3, h4, .serif { font-family: 'Lora', Georgia, serif; }
+    .mono { font-family: 'Courier Prime', monospace; font-variant-numeric: tabular-nums; }
+    .tabular { font-variant-numeric: tabular-nums; }
+    .hidden { display: none !important; }
+
+    /* Top Bar (3-Zone Contract) */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(250, 245, 236, 0.95);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--border-sand);
+    }
+
+    .topbar-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 20px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand-link {
+      font-family: 'Lora', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-espresso);
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .nav-link {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+
+    .nav-link:hover { color: var(--text-espresso); text-decoration: underline; text-underline-offset: 4px; }
+
+    .topbar-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+    .mobile-menu-btn {
+      display: none;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-sand);
+      background: var(--surface-ivory);
+      color: var(--text-espresso);
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .mobile-nav {
+      display: none;
+      background: var(--surface-ivory);
+      border-top: 1px solid var(--border-sand);
+      padding: 12px 20px;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .mobile-nav.open { display: flex; }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary { background: var(--accent-terracotta); color: #FFFDF8; }
+    .btn-primary:hover { background: var(--accent-terracotta-hover); }
+    .btn-secondary { background: var(--bg-cream-dark); color: var(--text-espresso); border-color: var(--border-sand); }
+    .btn-secondary:hover { background: #E5D9C3; }
+    .btn-forest { background: var(--admin-forest); color: #FFFFFF; }
+    .btn-forest:hover { background: var(--admin-forest-hover); }
+    .btn-mint { background: var(--admin-mint); color: var(--admin-forest); border-color: var(--admin-mint-border); }
+    .btn-mint:hover { background: #DCEBE1; }
+    .btn-danger { background: #FFFFFF; color: #A94442; border-color: #E6C7C6; }
+    .btn-danger:hover { background: #F9ECEC; }
+    .btn-danger-solid { background: #A94442; color: #FFFFFF; }
+    .btn-danger-solid:hover { background: #8E3533; }
+    .btn-sm { padding: 7px 12px; font-size: 0.8rem; border-radius: 8px; }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    /* Containers */
+    .container { max-width: 1140px; margin: 0 auto; padding: 36px 20px 64px; }
+
+    /* Hero */
+    .hero {
+      border-bottom: 1px solid var(--border-sand);
+      padding: 44px 20px;
+    }
+
+    .hero-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 36px;
+      align-items: center;
+    }
+
+    .kicker {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.9rem, 4vw, 3rem);
+      line-height: 1.15;
+      color: var(--text-espresso);
+      margin-bottom: 14px;
+    }
+
+    .hero p.lead {
+      font-size: 1.02rem;
+      color: #5C4E43;
+      max-width: 600px;
+      margin-bottom: 22px;
+    }
+
+    .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
+
+    .hero-featured {
+      background: var(--surface-ivory);
+      border: 1px solid var(--border-sand);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .hero-featured-title {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--bg-cream-dark);
+      margin-bottom: 14px;
+    }
+
+    .hero-mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .hero-mini-item {
+      cursor: pointer;
+      text-align: left;
+      background: none;
+      border: none;
+      font-family: inherit;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 32px;
+      padding-top: 28px;
+      border-top: 1px solid var(--border-sand);
+    }
+
+    .stat-card {
+      background: var(--surface-ivory);
+      border: 1px solid var(--border-sand);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+    }
+
+    .stat-card span {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .stat-card strong {
+      font-family: 'Lora', serif;
+      font-size: 1.5rem;
+      color: var(--text-espresso);
+    }
+
+    /* Controls & Catalog */
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .controls-top {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .search-box { flex: 1; min-width: 220px; }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-sand);
+      background-color: var(--surface-ivory);
+      color: var(--text-espresso);
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus { border-color: var(--accent-terracotta); }
+
+    .sort-box { width: 220px; }
+
+    .filter-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .filter-tab {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-sand);
+      background: var(--surface-ivory);
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .filter-tab.active {
+      background: var(--text-espresso);
+      color: var(--bg-cream);
+      border-color: var(--text-espresso);
+    }
+
+    /* Book Grid */
+    .book-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
+      gap: 22px;
+    }
+
+    .book-card {
+      background: var(--surface-ivory);
+      border: 1px solid var(--border-sand);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.18s ease;
+    }
+
+    .book-card:hover { transform: translateY(-2px); }
+
+    .cover-wrap {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      border-radius: 10px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #F5ECDC, #DFD3BE);
+      border: 1px solid var(--border-sand);
+      margin-bottom: 14px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .cover-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .cover-fallback {
+      width: 100%;
+      height: 100%;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: var(--text-espresso);
+    }
+
+    .book-kicker {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .book-kicker .label-tag {
+      color: var(--accent-terracotta);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.5px;
+    }
+
+    .book-title {
+      font-size: 1.15rem;
+      line-height: 1.3;
+      color: var(--text-espresso);
+      cursor: pointer;
+    }
+
+    .book-author {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .book-desc {
+      font-size: 0.82rem;
+      color: #5C4E43;
+      margin-top: 10px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .book-footer {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--bg-cream-dark);
+    }
+
+    .book-price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+
+    .book-price {
+      font-family: 'Lora', serif;
+      font-size: 1.12rem;
+      font-weight: 700;
+    }
+
+    .book-stock { font-size: 0.78rem; font-weight: 600; color: var(--accent-sage); }
+    .book-stock.out { color: #A94442; }
+
+    .book-actions { display: flex; gap: 8px; }
+
+    /* About & Footer */
+    .about-section {
+      background: rgba(239, 230, 213, 0.55);
+      border-top: 1px solid var(--border-sand);
+      padding: 48px 20px;
+    }
+
+    .about-grid {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .about-card {
+      background: var(--surface-ivory);
+      border: 1px solid var(--border-sand);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border-sand);
+      padding: 28px 20px;
+    }
+
+    .footer-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* Modals & Drawers */
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(45, 34, 28, 0.55);
+      backdrop-filter: blur(3px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+      overflow-y: auto;
+    }
+
+    .backdrop.open { display: flex; }
+    .backdrop.drawer-right { justify-content: flex-end; align-items: stretch; padding: 0; }
+
+    .modal {
+      background: var(--surface-ivory);
+      border: 1px solid var(--border-sand);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 600px;
+      padding: 26px;
+      max-height: 92vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 50px rgba(0,0,0,0.2);
+    }
+
+    .modal-lg { max-width: 720px; }
+
+    .drawer {
+      background: var(--surface-ivory);
+      border-left: 1px solid var(--border-sand);
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .drawer-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-sand);
+      background: var(--bg-cream);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .drawer-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
+    .drawer-footer {
+      padding: 18px 24px;
+      border-top: 1px solid var(--border-sand);
+      background: var(--bg-cream);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--bg-cream-dark);
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 4px 8px;
+      border-radius: 8px;
+    }
+
+    .close-btn:hover { background: var(--bg-cream-dark); color: var(--text-espresso); }
+
+    .form-group { margin-bottom: 14px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; }
+
+    .alert-error {
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: #F9ECEC;
+      border: 1px solid #E6C7C6;
+      color: #8F2D2B;
+      font-size: 0.82rem;
+      margin-bottom: 14px;
+    }
+
+    .alert-success {
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: var(--admin-mint);
+      border: 1px solid var(--admin-mint-border);
+      color: var(--admin-forest);
+      font-size: 0.84rem;
+      margin-bottom: 14px;
+    }
+
+    /* Admin Login */
+    .login-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 28px 20px;
+    }
+
+    .login-card {
+      max-width: 430px;
+      width: 100%;
+      margin: 24px auto;
+      background: var(--surface-ivory);
+      border: 1px solid var(--border-sand);
+      border-radius: 18px;
+      padding: 32px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .pw-wrap { position: relative; }
+    .pw-toggle {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+
+    /* Admin Dashboard (Dark Green, White, Light Green) */
+    .admin-layout {
+      min-height: 100vh;
+      display: flex;
+      background: #F6FAF7;
+      color: #1E2B24;
+    }
+
+    .admin-sidebar {
+      width: 260px;
+      flex-shrink: 0;
+      background: var(--admin-forest);
+      color: #FAF5EC;
+      padding: 22px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .admin-brand {
+      padding-bottom: 18px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid #2E5242;
+    }
+
+    .admin-brand h2 { font-size: 1.2rem; color: #FAF5EC; }
+    .admin-brand p { font-size: 0.78rem; color: #B8D0C2; margin-top: 2px; }
+
+    .sidebar-nav { display: flex; flex-direction: column; gap: 6px; }
+
+    .sidebar-btn {
+      width: 100%;
+      text-align: left;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      color: #DCEADF;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .sidebar-btn:hover { background: var(--admin-forest-hover); color: #FFFFFF; }
+    .sidebar-btn.active { background: var(--admin-mint); color: var(--admin-forest); font-weight: 700; }
+
+    .admin-main { flex: 1; min-width: 0; padding: 28px 32px; }
+    .admin-container { max-width: 1100px; margin: 0 auto; }
+
+    .admin-mobile-bar {
+      display: none;
+      background: var(--admin-forest);
+      color: #FAF5EC;
+      padding: 12px 16px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .admin-mobile-nav {
+      display: none;
+      background: var(--admin-forest);
+      padding: 10px 16px;
+      gap: 8px;
+      overflow-x: auto;
+      border-top: 1px solid #2E5242;
+    }
+
+    .admin-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: #FFFFFF;
+      border: 1px solid #D4E2D9;
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+
+    .kpi-card.highlight {
+      background: var(--admin-forest);
+      border-color: var(--admin-forest);
+      color: #FFFFFF;
+    }
+
+    .kpi-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #5B6B62;
+    }
+
+    .kpi-card.highlight .kpi-label { color: #B8D0C2; }
+
+    .kpi-value {
+      font-family: 'Lora', serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-top: 8px;
+      color: var(--admin-forest);
+    }
+
+    .kpi-card.highlight .kpi-value { color: #FFFFFF; }
+    .kpi-sub { font-size: 0.75rem; color: #5B6B62; margin-top: 4px; }
+    .kpi-card.highlight .kpi-sub { color: #B8D0C2; }
+
+    .admin-panel {
+      background: #FFFFFF;
+      border: 1px solid #D4E2D9;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .table-scroll { overflow-x: auto; }
+
+    table { width: 100%; border-collapse: collapse; text-align: left; min-width: 640px; }
+    thead tr { background: var(--admin-mint); border-bottom: 1px solid #D4E2D9; }
+    th {
+      padding: 12px 16px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--admin-forest);
+    }
+    td { padding: 12px 16px; font-size: 0.86rem; border-bottom: 1px solid #E7EFEA; }
+    tbody tr:hover { background: #F7FBF8; }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+    }
+    .st-wait { background: #F3EFE8; color: #5C4E43; border-color: #DFD3BE; }
+    .st-proc { background: #F6ECD8; color: #805B1B; border-color: #E4D1A7; }
+    .st-ship { background: #E6F0F7; color: #1E4F75; border-color: #C3DCEF; }
+    .st-done { background: #E7EFE2; color: #265239; border-color: #C5DEC0; }
+    .st-canc { background: #F9ECEC; color: #8F2D2B; border-color: #E6C7C6; }
+
+    /* Printable Styles */
+    .preview-stage {
+      background: var(--bg-cream-dark);
+      border: 1px dashed var(--border-sand);
+      border-radius: 12px;
+      padding: 24px 16px;
+      display: flex;
+      justify-content: center;
+      overflow-x: auto;
+    }
+
+    .printable-bookmark {
+      width: 240px;
+      min-height: 500px;
+      background: #FAF5EC;
+      border: 1.5px dashed #8C7A6B;
+      padding: 22px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #3B2F2F;
+    }
+
+    .bookmark-hole {
+      width: 14px; height: 14px; border-radius: 50%;
+      border: 1.5px solid #8C7A6B; background: #FFFDF8; margin: 0 auto 12px;
+    }
+
+    .printable-card {
+      width: 480px;
+      max-width: 100%;
+      background: #FAF5EC;
+      border: 2px solid #3B2F2F;
+      padding: 22px;
+      color: #3B2F2F;
+    }
+
+    #print-only-area { display: none; }
+
+    .toast-box {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 360px;
+    }
+
+    .toast-item {
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+      border: 1px solid var(--admin-mint-border);
+      background: #FFFFFF;
+      color: var(--admin-forest);
+    }
+
+    .toast-item.error { border-color: #E6C7C6; color: #8F2D2B; }
+
+    @media print {
+      body { background: #FFFFFF !important; }
+      #app-shell { display: none !important; }
+      #print-only-area {
+        display: flex !important;
+        justify-content: center;
+        padding: 16px;
+      }
+      .printable-bookmark, .printable-card {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .hero-grid, .about-grid, .stats-row { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .mobile-menu-btn { display: inline-flex; }
+      .admin-layout { flex-direction: column; }
+      .admin-sidebar { display: none; }
+      .admin-mobile-bar { display: flex; }
+      .admin-mobile-nav { display: flex; }
+      .admin-main { padding: 20px 16px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .sort-box { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app-shell">
+    <!-- ==================== STOREFRONT VIEW ==================== -->
+    <div id="view-storefront">
+      <header class="topbar">
+        <div class="topbar-inner">
+          <a href="#beranda" class="brand-link">The Reading Archive</a>
+
+          <nav class="nav-links" aria-label="Navigasi utama">
+            <a href="#katalog" class="nav-link">Katalog</a>
+            <a href="#tentang" class="nav-link">Tentang Kami</a>
+            <a id="nav-wa-link" href="#" target="_blank" rel="noopener noreferrer" class="nav-link">Kontak WhatsApp</a>
+            <button type="button" class="nav-link" onclick="goToAdmin()">Panel Admin</button>
+          </nav>
+
+          <div class="topbar-actions">
+            <button type="button" class="btn btn-primary btn-sm" onclick="openCartDrawer()">
+              Keranjang (<span id="cart-count-badge" class="tabular">0</span>)
+            </button>
+            <button type="button" class="mobile-menu-btn" onclick="toggleMobileNav()" aria-label="Menu">&#9776;</button>
+          </div>
+        </div>
+        <div id="mobile-nav" class="mobile-nav">
+          <a href="#katalog" class="nav-link" onclick="toggleMobileNav(false)">Katalog Buku</a>
+          <a href="#tentang" class="nav-link" onclick="toggleMobileNav(false)">Tentang Kami</a>
+          <a id="mobile-wa-link" href="#" target="_blank" rel="noopener noreferrer" class="nav-link">Kontak WhatsApp</a>
+          <button type="button" class="nav-link" style="text-align:left;font-weight:700;color:var(--admin-forest)" onclick="toggleMobileNav(false); goToAdmin();">Panel Admin</button>
+        </div>
+      </header>
+
+      <section id="beranda" class="hero">
+        <div class="hero-inner">
+          <div class="hero-grid">
+            <div>
+              <p class="kicker">Toko Buku Independen &amp; Ruang Kurasi Bacaan</p>
+              <h1>Menghimpun bacaan terpilih dalam kehangatan pustaka klasik</h1>
+              <p class="lead">
+                Temukan karya sastra, fiksi sejarah, sains, hingga filsafat praktis. Setiap buku dilengkapi penanda bacaan yang dapat dicetak serta pemesanan langsung melalui WhatsApp.
+              </p>
+              <div class="hero-cta">
+                <a href="#katalog" class="btn btn-primary">Jelajahi Katalog</a>
+                <a id="hero-wa-link" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Tanya Kurator via WhatsApp</a>
+              </div>
+            </div>
+
+            <div class="hero-featured">
+              <div class="hero-featured-title">Pilihan Kurator Pekan Ini</div>
+              <div id="hero-featured-grid" class="hero-mini-grid"></div>
+            </div>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-card">
+              <span>Judul dalam Katalog</span>
+              <strong id="store-stat-books" class="tabular">0</strong>
+            </div>
+            <div class="stat-card">
+              <span>Kategori Kurasi</span>
+              <strong id="store-stat-cats" class="tabular">0</strong>
+            </div>
+            <div class="stat-card">
+              <span>Total Eksemplar Tersedia</span>
+              <strong id="store-stat-stock" class="tabular">0</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <main id="katalog" class="container">
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:20px;">
+          <div>
+            <h2 style="font-size:1.75rem;">Katalog Buku Pilihan</h2>
+            <p style="font-size:0.9rem;color:var(--text-muted);">Cari judul, saring kategori, atau cetak kartu penanda buku koleksi Anda.</p>
+          </div>
+          <span id="catalog-count-label" style="font-size:0.82rem;color:var(--text-muted);" class="tabular"></span>
+        </div>
+
+        <section class="controls">
+          <div class="controls-top">
+            <div class="search-box">
+              <input type="text" id="store-search" placeholder="Cari judul buku atau nama penulis..." oninput="renderStoreCatalog()">
+            </div>
+            <div class="sort-box">
+              <select id="store-sort" onchange="renderStoreCatalog()">
+                <option value="newest">Urutkan: Terbaru</option>
+                <option value="price-asc">Harga: Terendah</option>
+                <option value="price-desc">Harga: Tertinggi</option>
+                <option value="title-asc">Judul: A – Z</option>
+              </select>
+            </div>
+          </div>
+          <div id="store-category-tabs" class="filter-tabs"></div>
+        </section>
+
+        <section id="store-book-grid" class="book-grid"></section>
+      </main>
+
+      <section id="tentang" class="about-section">
+        <div class="about-grid">
+          <div>
+            <p class="kicker">Tentang Toko Buku</p>
+            <h2 style="font-size:1.75rem;margin-bottom:10px;">Merawat tradisi membaca dengan kurasi yang personal</h2>
+            <p style="font-size:0.94rem;color:#5C4E43;">
+              The Reading Archive lahir dari kecintaan pada buku cetak dan pustaka independen. Setiap eksemplar dikemas rapi dengan pilihan cetak pembatas buku dan kartu arsip koleksi.
+            </p>
+          </div>
+          <div class="about-card">
+            <h3 style="font-size:1.1rem;margin-bottom:8px;">Layanan Konsultasi &amp; Pesanan</h3>
+            <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px;">
+              Butuh rekomendasi bacaan atau pesanan komunitas? Hubungi meja kurator kami langsung via WhatsApp.
+            </p>
+            <a id="about-wa-link" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-forest" style="width:100%;">
+              Chat WhatsApp (<span id="about-wa-display" class="tabular">081360450088</span>)
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div class="footer-inner">
+          <p>&copy; 2026 The Reading Archive &middot; Toko Buku Independen &amp; Katalog Bacaan</p>
+          <div style="display:flex;gap:18px;align-items:center;">
+            <a href="#katalog" style="color:inherit;text-decoration:none;">Katalog</a>
+            <a id="footer-wa-link" href="#" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">WhatsApp</a>
+            <button type="button" onclick="goToAdmin()" style="background:none;border:none;color:var(--admin-forest);font-weight:700;cursor:pointer;font-family:inherit;font-size:inherit;">Login Admin</button>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- ==================== ADMIN LOGIN VIEW ==================== -->
+    <div id="view-admin-login" class="login-page hidden">
+      <div style="max-width:430px;width:100%;margin:0 auto;">
+        <button type="button" onclick="goToStorefront()" class="nav-link" style="font-weight:600;">&larr; Kembali ke Halaman Pengunjung</button>
+      </div>
+
+      <div class="login-card">
+        <div style="border-bottom:1px solid var(--bg-cream-dark);padding-bottom:16px;margin-bottom:20px;">
+          <h1 style="font-size:1.4rem;">Login Administrator</h1>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">The Reading Archive &mdash; Panel Pengelolaan Toko</p>
+        </div>
+
+        <div id="login-error" class="alert-error hidden"></div>
+
+        <form onsubmit="handleAdminLogin(event)">
+          <div class="form-group">
+            <label for="login-username">Username</label>
+            <input type="text" id="login-username" placeholder="Masukkan username admin" autocomplete="username">
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <div class="pw-wrap">
+              <input type="password" id="login-password" placeholder="Masukkan password" autocomplete="current-password" style="padding-right:84px;">
+              <button type="button" id="pw-toggle-btn" class="pw-toggle" onclick="togglePasswordVisibility()">Tampilkan</button>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-forest" style="width:100%;margin-top:6px;">Masuk ke Dashboard Admin</button>
+        </form>
+
+        <p style="font-size:0.76rem;color:var(--text-muted);margin-top:18px;padding-top:14px;border-top:1px solid var(--bg-cream-dark);">
+          Kredensial demo: Username <strong>admin</strong> &amp; Password <strong>admin</strong>. Untuk produksi, autentikasi wajib dipindahkan ke backend yang aman.
+        </p>
+      </div>
+
+      <p style="text-align:center;font-size:0.78rem;color:var(--text-muted);">&copy; 2026 The Reading Archive &middot; Bookstore Management System</p>
+    </div>
+
+    <!-- ==================== ADMIN DASHBOARD VIEW ==================== -->
+    <div id="view-admin-dashboard" class="admin-layout hidden">
+      <div class="admin-mobile-bar">
+        <div>
+          <strong style="font-family:'Lora',serif;">The Reading Archive</strong>
+          <div style="font-size:0.7rem;color:#B8D0C2;">Dashboard Admin</div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button type="button" class="btn btn-sm btn-mint" onclick="goToStorefront()">Lihat Toko</button>
+          <button type="button" class="btn btn-sm btn-danger" onclick="handleAdminLogout()">Logout</button>
+        </div>
+      </div>
+      <div id="admin-mobile-nav" class="admin-mobile-nav">
+        <button type="button" class="btn btn-sm btn-mint" onclick="switchAdminTab('dashboard')">Dashboard</button>
+        <button type="button" class="btn btn-sm btn-mint" onclick="switchAdminTab('products')">Produk</button>
+        <button type="button" class="btn btn-sm btn-mint" onclick="switchAdminTab('categories')">Kategori</button>
+        <button type="button" class="btn btn-sm btn-mint" onclick="switchAdminTab('orders')">Pesanan</button>
+        <button type="button" class="btn btn-sm btn-mint" onclick="switchAdminTab('whatsapp')">WhatsApp</button>
+      </div>
+
+      <aside class="admin-sidebar">
+        <div>
+          <div class="admin-brand">
+            <h2>The Reading Archive</h2>
+            <p>Dashboard Admin UMKM</p>
+          </div>
+          <nav class="sidebar-nav">
+            <button type="button" class="sidebar-btn active" data-tab="dashboard" onclick="switchAdminTab('dashboard')">Dashboard</button>
+            <button type="button" class="sidebar-btn" data-tab="products" onclick="switchAdminTab('products')">Kelola Produk</button>
+            <button type="button" class="sidebar-btn" data-tab="categories" onclick="switchAdminTab('categories')">Kelola Kategori</button>
+            <button type="button" class="sidebar-btn" data-tab="orders" onclick="switchAdminTab('orders')">Kelola Pesanan</button>
+            <button type="button" class="sidebar-btn" data-tab="whatsapp" onclick="switchAdminTab('whatsapp')">Pengaturan WhatsApp</button>
+          </nav>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;padding-top:16px;border-top:1px solid #2E5242;">
+          <button type="button" class="sidebar-btn" onclick="goToStorefront()">Lihat Halaman Toko</button>
+          <button type="button" class="sidebar-btn" style="color:#FAD2D0;" onclick="handleAdminLogout()">Logout</button>
+        </div>
+      </aside>
+
+      <main class="admin-main">
+        <div id="admin-content" class="admin-container"></div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ==================== MODALS & DRAWERS ==================== -->
+  <!-- Cart & Checkout Drawer -->
+  <div id="cart-backdrop" class="backdrop drawer-right">
+    <div class="drawer">
+      <div class="drawer-header">
+        <div>
+          <h2 id="cart-drawer-title" style="font-size:1.15rem;">Keranjang Belanja</h2>
+          <p id="cart-drawer-subtitle" style="font-size:0.76rem;color:var(--text-muted);">Periksa buku pilihan Anda</p>
+        </div>
+        <button type="button" class="close-btn" onclick="closeCartDrawer()">&times;</button>
+      </div>
+      <div id="cart-drawer-body" class="drawer-body"></div>
+      <div id="cart-drawer-footer" class="drawer-footer"></div>
+    </div>
+  </div>
+
+  <!-- Book Detail Modal -->
+  <div id="detail-backdrop" class="backdrop">
+    <div class="modal modal-lg" id="detail-modal-content"></div>
+  </div>
+
+  <!-- Print Bookmark / Card Modal (Preserved Feature) -->
+  <div id="print-backdrop" class="backdrop">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <h2>Cetak Penanda Detail Buku</h2>
+        <button type="button" class="close-btn" onclick="closePrintModal()">&times;</button>
+      </div>
+      <div style="display:flex;justify-content:center;gap:10px;margin-bottom:18px;flex-wrap:wrap;">
+        <button type="button" id="btn-tpl-bookmark" class="btn btn-sm btn-primary" onclick="switchPrintTemplate('bookmark')">Model Pembatas Buku (Bookmark)</button>
+        <button type="button" id="btn-tpl-card" class="btn btn-sm btn-secondary" onclick="switchPrintTemplate('card')">Model Kartu Perpustakaan</button>
+      </div>
+      <div id="print-preview-stage" class="preview-stage"></div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px;">
+        <button type="button" class="btn btn-secondary" onclick="closePrintModal()">Tutup</button>
+        <button type="button" class="btn btn-primary" onclick="executePrint()">Cetak Sekarang / Simpan PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Product Modal -->
+  <div id="product-backdrop" class="backdrop">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <h2 id="product-modal-title">Tambah Buku Baru</h2>
+        <button type="button" class="close-btn" onclick="closeProductModal()">&times;</button>
+      </div>
+      <div id="product-form-error" class="alert-error hidden"></div>
+      <form id="product-form" onsubmit="saveAdminProduct(event)">
+        <input type="hidden" id="prod-id">
+        <div class="form-grid">
+          <div class="form-group full">
+            <label for="prod-title">Judul Buku *</label>
+            <input type="text" id="prod-title" required placeholder="Contoh: Laut Bercerita">
+          </div>
+          <div class="form-group">
+            <label for="prod-author">Penulis *</label>
+            <input type="text" id="prod-author" required placeholder="Contoh: Leila S. Chudori">
+          </div>
+          <div class="form-group">
+            <label for="prod-category">Kategori *</label>
+            <select id="prod-category" required></select>
+          </div>
+          <div class="form-group">
+            <label for="prod-price">Harga (Rp) *</label>
+            <input type="number" id="prod-price" required min="1" step="1" placeholder="115000">
+          </div>
+          <div class="form-group">
+            <label for="prod-stock">Stok *</label>
+            <input type="number" id="prod-stock" required min="0" step="1" placeholder="10">
+          </div>
+          <div class="form-group">
+            <label for="prod-label">Label Produk</label>
+            <select id="prod-label">
+              <option value="">Tanpa Label</option>
+              <option value="Bestseller">Bestseller</option>
+              <option value="Terbaru">Terbaru</option>
+              <option value="Rekomendasi">Rekomendasi</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="prod-pages">Jumlah Halaman</label>
+            <input type="number" id="prod-pages" min="1" placeholder="379">
+          </div>
+          <div class="form-group full">
+            <label for="prod-cover-url">URL Gambar Sampul</label>
+            <input type="text" id="prod-cover-url" placeholder="https://... (atau unggah file di bawah)">
+          </div>
+          <div class="form-group full">
+            <label for="prod-cover-file">Atau Unggah File Gambar Sampul</label>
+            <input type="file" id="prod-cover-file" accept="image/*" onchange="handleCoverUpload(event)">
+          </div>
+          <div class="form-group full">
+            <label for="prod-desc">Deskripsi Buku</label>
+            <textarea id="prod-desc" rows="3" placeholder="Sinopsis singkat buku..."></textarea>
+          </div>
+          <div class="form-group full">
+            <label for="prod-quote">Kutipan Pilihan (untuk Penanda Cetak)</label>
+            <input type="text" id="prod-quote" placeholder="Kutipan berkesan dari buku...">
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px;">
+          <button type="button" class="btn btn-secondary" onclick="closeProductModal()">Batal</button>
+          <button type="submit" class="btn btn-forest">Simpan Buku</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Generic Confirmation / Detail Modal -->
+  <div id="confirm-backdrop" class="backdrop">
+    <div class="modal" id="confirm-modal-content"></div>
+  </div>
+
+  <div id="print-only-area"></div>
+  <div id="toast-box" class="toast-box"></div>
+
+  <script>
+    const KEYS = {
+      BOOKS: 'tra_books_v1',
+      CATEGORIES: 'tra_categories_v1',
+      CART: 'tra_cart_v1',
+      ORDERS: 'tra_orders_v1',
+      SETTINGS: 'tra_settings_v1',
+      SESSION: 'tra_admin_session_v1'
+    };
+
+    const ORDER_STATUSES = ['Menunggu Konfirmasi', 'Diproses', 'Dikirim', 'Selesai', 'Dibatalkan'];
+
+    const DEFAULT_CATEGORIES = [
+      { id: 'cat-fiksi', name: 'Fiksi' },
+      { id: 'cat-sastra', name: 'Sastra' },
+      { id: 'cat-sains', name: 'Sains & Teknologi' },
+      { id: 'cat-sejarah', name: 'Sejarah' },
+      { id: 'cat-nonfiksi', name: 'Nonfiksi' }
+    ];
+
+    const DEFAULT_BOOKS = [
+      {
+        id: 'bk-1',
+        title: 'Laut Bercerita',
+        author: 'Leila S. Chudori',
+        category: 'Fiksi',
+        price: 115000,
+        stock: 14,
+        label: 'Bestseller',
+        pages: 379,
+        coverUrl: '',
+        description: 'Novel fiksi sejarah yang mengisahkan persahabatan, pengkhianatan, dan perjuangan keluarga aktivis pada masa kelam 1998.',
+        quote: 'Matilah engkau mati, kau akan lahir berkali-kali.',
+        createdAt: '2026-10-14T09:00:00.000Z'
+      },
+      {
+        id: 'bk-2',
+        title: 'Filosofi Teras',
+        author: 'Henry Manampiring',
+        category: 'Nonfiksi',
+        price: 98000,
+        stock: 18,
+        label: 'Rekomendasi',
+        pages: 320,
+        coverUrl: '',
+        description: 'Pengantar filsafat Stoa Yunani-Romawi kuno yang dikemas relevan untuk mengatasi kecemasan modern dan hidup lebih tenang.',
+        quote: 'Fokus pada hal-hal yang berada di dalam kendali kita sendiri.',
+        createdAt: '2026-11-10T10:00:00.000Z'
+      },
+      {
+        id: 'bk-3',
+        title: 'Bumi Manusia',
+        author: 'Pramoedya Ananta Toer',
+        category: 'Sastra',
+        price: 145000,
+        stock: 9,
+        label: 'Bestseller',
+        pages: 535,
+        coverUrl: '',
+        description: 'Roman pertama Tetralogi Buru yang merekam gejolak intelektual Minke di masa Hindia Belanda.',
+        quote: 'Seorang terpelajar harus juga berlaku adil sejak dalam pikiran apalagi dalam perbuatan.',
+        createdAt: '2026-11-18T11:30:00.000Z'
+      },
+      {
+        id: 'bk-4',
+        title: 'Kosmos & Tata Bintang',
+        author: 'Carl Sagan',
+        category: 'Sains & Teknologi',
+        price: 165000,
+        stock: 7,
+        label: 'Terbaru',
+        pages: 412,
+        coverUrl: '',
+        description: 'Penjelajahan puitis tentang sejarah astronomi, evolusi peradaban, dan posisi kita di alam semesta.',
+        quote: 'Di suatu tempat, sesuatu yang luar biasa sedang menunggu untuk diketahui.',
+        createdAt: '2026-11-20T14:00:00.000Z'
+      },
+      {
+        id: 'bk-5',
+        title: 'Jejak Niaga Nusantara',
+        author: 'Denys Lombard',
+        category: 'Sejarah',
+        price: 185000,
+        stock: 6,
+        label: 'Rekomendasi',
+        pages: 468,
+        coverUrl: '',
+        description: 'Telusur arsip jalur rempah, pelabuhan kuno, dan pertukaran budaya maritim Nusantara lintas abad.',
+        quote: 'Laut bukan pemisah pulau, melainkan jalan raya peradaban maritim.',
+        createdAt: '2026-11-22T08:15:00.000Z'
+      }
+    ];
+
+    const DEFAULT_ORDERS = [
+      {
+        id: 'ORD-261120-101',
+        customerName: 'Nadia Kusuma',
+        customerWhatsapp: '081234567890',
+        notes: 'Jl. Melati No. 14, Menteng, Jakarta Pusat.',
+        items: [
+          { bookId: 'bk-1', title: 'Laut Bercerita', author: 'Leila S. Chudori', price: 115000, quantity: 1 },
+          { bookId: 'bk-2', title: 'Filosofi Teras', author: 'Henry Manampiring', price: 98000, quantity: 1 }
+        ],
+        totalPrice: 213000,
+        status: 'Selesai',
+        createdAt: '2026-11-20T10:15:00.000Z'
+      },
+      {
+        id: 'ORD-261123-102',
+        customerName: 'Bagas Pratama',
+        customerWhatsapp: '085678901234',
+        notes: 'Perumahan Taman Sari Blok C2, Bandung.',
+        items: [
+          { bookId: 'bk-3', title: 'Bumi Manusia', author: 'Pramoedya Ananta Toer', price: 145000, quantity: 1 }
+        ],
+        totalPrice: 145000,
+        status: 'Menunggu Konfirmasi',
+        createdAt: '2026-11-23T15:40:00.000Z'
+      }
+    ];
+
+    const DEFAULT_SETTINGS = { whatsappNumber: '081360450088', storeName: 'The Reading Archive' };
+
+    function readJson(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (e) {
+        return fallback;
+      }
+    }
+
+    function writeJson(key, val) {
+      localStorage.setItem(key, JSON.stringify(val));
+    }
+
+    let categories = readJson(KEYS.CATEGORIES, null);
+    if (!Array.isArray(categories) || categories.length === 0) {
+      categories = DEFAULT_CATEGORIES.slice();
+      writeJson(KEYS.CATEGORIES, categories);
+    }
+
+    let books = readJson(KEYS.BOOKS, null);
+    if (!Array.isArray(books)) {
+      books = DEFAULT_BOOKS.slice();
+      writeJson(KEYS.BOOKS, books);
+    }
+
+    let cart = readJson(KEYS.CART, []);
+    if (!Array.isArray(cart)) cart = [];
+
+    let orders = readJson(KEYS.ORDERS, null);
+    if (!Array.isArray(orders)) {
+      orders = DEFAULT_ORDERS.slice();
+      writeJson(KEYS.ORDERS, orders);
+    }
+
+    let settings = readJson(KEYS.SETTINGS, null);
+    if (!settings || !settings.whatsappNumber) {
+      settings = Object.assign({}, DEFAULT_SETTINGS);
+      writeJson(KEYS.SETTINGS, settings);
+    }
+
+    let selectedCategory = 'Semua';
+    let currentAdminTab = 'dashboard';
+    let cartStep = 'cart';
+    let lastConfirmedOrder = null;
+    let printBookId = null;
+    let printTemplate = 'bookmark';
+    let orderSearch = '';
+    let orderStatusFilter = 'Semua';
+
+    function esc(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function rupiah(num) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(Number(num) || 0);
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '-';
+      const d = new Date(iso);
+      return Number.isNaN(d.getTime()) ? '-' : d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function formatDateTime(iso) {
+      if (!iso) return '-';
+      const d = new Date(iso);
+      return Number.isNaN(d.getTime()) ? '-' : d.toLocaleString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function waFormat(phone) {
+      const digits = String(phone || '').replace(/\D/g, '');
+      if (!digits) return '6281360450088';
+      if (digits.startsWith('0')) return '62' + digits.slice(1);
+      if (digits.startsWith('8')) return '62' + digits;
+      return digits;
+    }
+
+    function waUrl(phone, msg) {
+      return 'https://wa.me/' + waFormat(phone) + '?text=' + encodeURIComponent(msg);
+    }
+
+    function showToast(msg, isError) {
+      const box = document.getElementById('toast-box');
+      const el = document.createElement('div');
+      el.className = 'toast-item' + (isError ? ' error' : '');
+      el.textContent = msg;
+      box.appendChild(el);
+      setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 3500);
+    }
+
+    function coverHtml(book) {
+      if (book.coverUrl && book.coverUrl.trim()) {
+        return '<img src="' + esc(book.coverUrl) + '" alt="' + esc(book.title) + '" referrerpolicy="no-referrer" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';">' +
+          '<div class="cover-fallback" style="display:none;"><div class="mono" style="font-size:10px;color:var(--text-muted);border-bottom:1px solid #C8B9A0;padding-bottom:6px;">ARCHIVE ED.</div><div><div class="serif" style="font-weight:700;font-size:0.95rem;">' + esc(book.title) + '</div><div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">' + esc(book.author) + '</div></div><div class="mono" style="font-size:9px;color:var(--text-muted);border-top:1px solid #C8B9A0;padding-top:6px;">THE READING ARCHIVE</div></div>';
+      }
+      return '<div class="cover-fallback"><div class="mono" style="font-size:10px;color:var(--text-muted);border-bottom:1px solid #C8B9A0;padding-bottom:6px;">ARCHIVE ED.</div><div><div class="serif" style="font-weight:700;font-size:0.95rem;">' + esc(book.title) + '</div><div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">' + esc(book.author) + '</div></div><div class="mono" style="font-size:9px;color:var(--text-muted);border-top:1px solid #C8B9A0;padding-top:6px;">THE READING ARCHIVE</div></div>';
+    }
+
+    // ==================== ROUTING & AUTH ====================
+    function isAuthed() {
+      return sessionStorage.getItem(KEYS.SESSION) === 'authenticated';
+    }
+
+    function showView(viewId) {
+      document.getElementById('view-storefront').classList.add('hidden');
+      document.getElementById('view-admin-login').classList.add('hidden');
+      document.getElementById('view-admin-dashboard').classList.add('hidden');
+      document.getElementById(viewId).classList.remove('hidden');
+    }
+
+    function goToAdmin() {
+      window.location.hash = 'admin';
+      if (isAuthed()) {
+        showView('view-admin-dashboard');
+        renderAdminView();
+      } else {
+        document.getElementById('login-error').classList.add('hidden');
+        showView('view-admin-login');
+      }
+      window.scrollTo(0, 0);
+    }
+
+    function goToStorefront() {
+      if (window.location.hash === '#admin') {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+      showView('view-storefront');
+      renderStorefront();
+      window.scrollTo(0, 0);
+    }
+
+    function togglePasswordVisibility() {
+      const inp = document.getElementById('login-password');
+      const btn = document.getElementById('pw-toggle-btn');
+      if (inp.type === 'password') {
+        inp.type = 'text';
+        btn.textContent = 'Sembunyikan';
+      } else {
+        inp.type = 'password';
+        btn.textContent = 'Tampilkan';
+      }
+    }
+
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      const user = document.getElementById('login-username').value.trim();
+      const pass = document.getElementById('login-password').value;
+      const errBox = document.getElementById('login-error');
+
+      if (user === 'admin' && pass === 'admin') {
+        sessionStorage.setItem(KEYS.SESSION, 'authenticated');
+        errBox.classList.add('hidden');
+        document.getElementById('login-username').value = '';
+        document.getElementById('login-password').value = '';
+        showView('view-admin-dashboard');
+        renderAdminView();
+        showToast('Berhasil masuk ke Dashboard Admin.');
+      } else {
+        errBox.textContent = 'Username atau password salah. Gunakan kredensial demo: admin / admin.';
+        errBox.classList.remove('hidden');
+      }
+    }
+
+    function handleAdminLogout() {
+      sessionStorage.removeItem(KEYS.SESSION);
+      showToast('Anda telah keluar dari sesi administrator.');
+      goToStorefront();
+    }
+
+    function toggleMobileNav(force) {
+      const nav = document.getElementById('mobile-nav');
+      if (typeof force === 'boolean') {
+        nav.classList.toggle('open', force);
+      } else {
+        nav.classList.toggle('open');
+      }
+    }
+
+    // ==================== STOREFRONT RENDER ====================
+    function syncWhatsAppLinks() {
+      const msg = 'Halo ' + settings.storeName + ', saya ingin bertanya tentang buku di katalog.';
+      const href = waUrl(settings.whatsappNumber, msg);
+      ['nav-wa-link', 'mobile-wa-link', 'hero-wa-link', 'about-wa-link', 'footer-wa-link'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.href = href;
+      });
+      const disp = document.getElementById('about-wa-display');
+      if (disp) disp.textContent = settings.whatsappNumber;
+    }
+
+    function renderStorefront() {
+      syncWhatsAppLinks();
+      const totalCart = cart.reduce((s, c) => s + c.quantity, 0);
+      document.getElementById('cart-count-badge').textContent = totalCart;
+
+      document.getElementById('store-stat-books').textContent = books.length + ' Buku';
+      document.getElementById('store-stat-cats').textContent = categories.length + ' Kategori';
+      document.getElementById('store-stat-stock').textContent = books.reduce((s, b) => s + Math.max(0, b.stock), 0) + ' Eks';
+
+      // Featured 3
+      document.getElementById('hero-featured-grid').innerHTML = books.slice(0, 3).map(b =>
+        '<button type="button" class="hero-mini-item" onclick="openDetailModal(\'' + esc(b.id) + '\')">' +
+          '<div class="cover-wrap" style="margin-bottom:8px;">' + coverHtml(b) + '</div>' +
+          '<div class="serif" style="font-size:0.78rem;font-weight:700;color:var(--text-espresso);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(b.title) + '</div>' +
+          '<div class="tabular" style="font-size:0.72rem;color:var(--text-muted);">' + rupiah(b.price) + '</div>' +
+        '</button>'
+      ).join('');
+
+      // Category Tabs
+      if (selectedCategory !== 'Semua' && !categories.some(c => c.name === selectedCategory)) {
+        selectedCategory = 'Semua';
+      }
+      const tabsEl = document.getElementById('store-category-tabs');
+      const tabsHtml = ['<button type="button" class="filter-tab ' + (selectedCategory === 'Semua' ? 'active' : '') + '" onclick="setStoreCategory(\'Semua\')">Semua Kategori</button>']
+        .concat(categories.map(c =>
+          '<button type="button" class="filter-tab ' + (selectedCategory === c.name ? 'active' : '') + '" onclick="setStoreCategory(\'' + esc(c.name) + '\')">' + esc(c.name) + '</button>'
+        ));
+      tabsEl.innerHTML = tabsHtml.join('');
+
+      renderStoreCatalog();
+    }
+
+    function setStoreCategory(catName) {
+      selectedCategory = catName;
+      renderStorefront();
+    }
+
+    function renderStoreCatalog() {
+      const q = (document.getElementById('store-search').value || '').trim().toLowerCase();
+      const sort = document.getElementById('store-sort').value;
+
+      let list = books.filter(b => {
+        const matchCat = selectedCategory === 'Semua' || b.category === selectedCategory;
+        const matchQ = !q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q) || (b.description || '').toLowerCase().includes(q);
+        return matchCat && matchQ;
+      });
+
+      if (sort === 'price-asc') list.sort((a, b) => a.price - b.price);
+      else if (sort === 'price-desc') list.sort((a, b) => b.price - a.price);
+      else if (sort === 'title-asc') list.sort((a, b) => a.title.localeCompare(b.title, 'id'));
+      else list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      document.getElementById('catalog-count-label').textContent = 'Menampilkan ' + list.length + ' dari ' + books.length + ' buku';
+      const grid = document.getElementById('store-book-grid');
+
+      if (list.length === 0) {
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:48px 20px;background:var(--surface-ivory);border:1px dashed var(--border-sand);border-radius:16px;"><h3 class="serif">Buku tidak ditemukan</h3><p style="font-size:0.86rem;color:var(--text-muted);margin-top:6px;">Ubah kata kunci pencarian atau pilih kategori lain.</p></div>';
+        return;
+      }
+
+      grid.innerHTML = list.map(b => {
+        const out = b.stock <= 0;
+        return '<article class="book-card">' +
+          '<div>' +
+            '<div class="cover-wrap" onclick="openDetailModal(\'' + esc(b.id) + '\')">' + coverHtml(b) + '</div>' +
+            '<div class="book-kicker">' + esc(b.category) + (b.label ? ' &middot; <span class="label-tag">' + esc(b.label) + '</span>' : '') + '</div>' +
+            '<h3 class="book-title serif" onclick="openDetailModal(\'' + esc(b.id) + '\')">' + esc(b.title) + '</h3>' +
+            '<p class="book-author">' + esc(b.author) + '</p>' +
+            (b.description ? '<p class="book-desc">' + esc(b.description) + '</p>' : '') +
+          '</div>' +
+          '<div class="book-footer">' +
+            '<div class="book-price-row">' +
+              '<span class="book-price tabular">' + rupiah(b.price) + '</span>' +
+              '<span class="book-stock tabular ' + (out ? 'out' : '') + '">' + (out ? 'Stok Habis' : 'Stok: ' + b.stock) + '</span>' +
+            '</div>' +
+            '<div class="book-actions">' +
+              '<button type="button" class="btn btn-primary btn-sm" style="flex:1;" ' + (out ? 'disabled' : '') + ' onclick="addToCart(\'' + esc(b.id) + '\')">' + (out ? 'Stok Habis' : '+ Keranjang') + '</button>' +
+              '<button type="button" class="btn btn-secondary btn-sm" onclick="openDetailModal(\'' + esc(b.id) + '\')">Detail</button>' +
+              '<button type="button" class="btn btn-secondary btn-sm" title="Cetak Penanda" onclick="openPrintModal(\'' + esc(b.id) + '\')">Cetak</button>' +
+            '</div>' +
+          '</div>' +
+        '</article>';
+      }).join('');
+    }
+
+    // ==================== CART & CHECKOUT ====================
+    function addToCart(bookId) {
+      const book = books.find(b => b.id === bookId);
+      if (!book || book.stock <= 0) {
+        showToast('Stok buku sedang habis.', true);
+        return;
+      }
+      const existing = cart.find(c => c.bookId === bookId);
+      if (existing) {
+        if (existing.quantity >= book.stock) {
+          showToast('Jumlah di keranjang mencapai batas stok.', true);
+          return;
+        }
+        existing.quantity += 1;
+      } else {
+        cart.push({ bookId: bookId, quantity: 1 });
+      }
+      writeJson(KEYS.CART, cart);
+      renderStorefront();
+      showToast('"' + book.title + '" ditambahkan ke keranjang.');
+    }
+
+    function updateCartQty(bookId, delta) {
+      const book = books.find(b => b.id === bookId);
+      cart = cart.map(c => {
+        if (c.bookId !== bookId) return c;
+        let q = c.quantity + delta;
+        if (book && q > book.stock) q = book.stock;
+        return { bookId: c.bookId, quantity: q };
+      }).filter(c => c.quantity > 0);
+      writeJson(KEYS.CART, cart);
+      renderStorefront();
+      renderCartDrawer();
+    }
+
+    function removeFromCart(bookId) {
+      cart = cart.filter(c => c.bookId !== bookId);
+      writeJson(KEYS.CART, cart);
+      renderStorefront();
+      renderCartDrawer();
+    }
+
+    function openCartDrawer() {
+      cartStep = 'cart';
+      renderCartDrawer();
+      document.getElementById('cart-backdrop').classList.add('open');
+    }
+
+    function closeCartDrawer() {
+      document.getElementById('cart-backdrop').classList.remove('open');
+    }
+
+    function renderCartDrawer() {
+      const title = document.getElementById('cart-drawer-title');
+      const sub = document.getElementById('cart-drawer-subtitle');
+      const body = document.getElementById('cart-drawer-body');
+      const foot = document.getElementById('cart-drawer-footer');
+
+      const lines = cart.map(item => {
+        const b = books.find(x => x.id === item.bookId);
+        return b ? { item: item, book: b } : null;
+      }).filter(Boolean);
+
+      const total = lines.reduce((s, l) => s + l.book.price * l.item.quantity, 0);
+      const count = lines.reduce((s, l) => s + l.item.quantity, 0);
+
+      if (cartStep === 'cart') {
+        title.textContent = 'Keranjang Belanja (' + count + ')';
+        sub.textContent = 'Periksa buku pilihan sebelum melanjutkan checkout';
+        if (lines.length === 0) {
+          body.innerHTML = '<div style="text-align:center;padding:48px 16px;color:var(--text-muted);"><h3 class="serif" style="color:var(--text-espresso);">Keranjang masih kosong</h3><p style="font-size:0.84rem;margin-top:6px;">Pilih buku dari katalog untuk memulai pemesanan.</p></div>';
+          foot.innerHTML = '';
+          return;
+        }
+        body.innerHTML = lines.map(l =>
+          '<div style="display:flex;gap:12px;padding:12px;border-radius:12px;background:var(--bg-cream);border:1px solid var(--border-sand);margin-bottom:12px;">' +
+            '<div class="cover-wrap" style="width:58px;margin-bottom:0;flex-shrink:0;">' + coverHtml(l.book) + '</div>' +
+            '<div style="flex:1;min-width:0;">' +
+              '<div style="display:flex;justify-content:space-between;gap:8px;">' +
+                '<strong class="serif" style="font-size:0.9rem;">' + esc(l.book.title) + '</strong>' +
+                '<button type="button" onclick="removeFromCart(\'' + esc(l.book.id) + '\')" style="background:none;border:none;color:#A94442;cursor:pointer;font-size:0.78rem;">Hapus</button>' +
+              '</div>' +
+              '<div style="font-size:0.76rem;color:var(--text-muted);">' + esc(l.book.author) + '</div>' +
+              '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">' +
+                '<div style="display:inline-flex;border:1px solid var(--border-sand);border-radius:8px;background:var(--surface-ivory);">' +
+                  '<button type="button" onclick="updateCartQty(\'' + esc(l.book.id) + '\', -1)" style="padding:4px 10px;border:none;background:none;cursor:pointer;font-weight:700;">-</button>' +
+                  '<span class="tabular" style="padding:4px 8px;font-size:0.82rem;font-weight:700;">' + l.item.quantity + '</span>' +
+                  '<button type="button" onclick="updateCartQty(\'' + esc(l.book.id) + '\', 1)" ' + (l.item.quantity >= l.book.stock ? 'disabled' : '') + ' style="padding:4px 10px;border:none;background:none;cursor:pointer;font-weight:700;">+</button>' +
+                '</div>' +
+                '<strong class="tabular" style="font-size:0.88rem;">' + rupiah(l.book.price * l.item.quantity) + '</strong>' +
+              '</div>' +
+            '</div>' +
+          '</div>'
+        ).join('');
+        foot.innerHTML =
+          '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;">' +
+            '<span style="font-size:0.86rem;color:var(--text-muted);">Total Belanja</span>' +
+            '<strong class="serif tabular" style="font-size:1.25rem;">' + rupiah(total) + '</strong>' +
+          '</div>' +
+          '<button type="button" class="btn btn-primary" style="width:100%;" onclick="cartStep=\'checkout\';renderCartDrawer();">Lanjut ke Checkout</button>';
+      } else if (cartStep === 'checkout') {
+        title.textContent = 'Formulir Checkout';
+        sub.textContent = 'Pesanan disimpan dulu sebelum membuka WhatsApp';
+        body.innerHTML =
+          '<div id="checkout-err" class="alert-error hidden"></div>' +
+          '<div style="padding:12px;border-radius:12px;background:var(--bg-cream);border:1px solid var(--border-sand);margin-bottom:16px;font-size:0.82rem;">' +
+            '<div style="font-weight:700;margin-bottom:6px;">Ringkasan (' + count + ' buku)</div>' +
+            lines.map(l => '<div style="display:flex;justify-content:space-between;"><span>' + esc(l.book.title) + ' &times; ' + l.item.quantity + '</span><span class="tabular">' + rupiah(l.book.price * l.item.quantity) + '</span></div>').join('') +
+            '<div style="display:flex;justify-content:space-between;font-weight:700;margin-top:8px;padding-top:8px;border-top:1px solid var(--border-sand);"><span>Total</span><span class="tabular">' + rupiah(total) + '</span></div>' +
+          '</div>' +
+          '<form id="checkout-form" onsubmit="submitCheckout(event)">' +
+            '<div class="form-group"><label for="co-name">Nama Pelanggan *</label><input type="text" id="co-name" required placeholder="Contoh: Raka Pratama"></div>' +
+            '<div class="form-group"><label for="co-wa">Nomor WhatsApp Pelanggan *</label><input type="tel" id="co-wa" required placeholder="Contoh: 081234567890"></div>' +
+            '<div class="form-group"><label for="co-notes">Alamat Pengiriman &amp; Catatan *</label><textarea id="co-notes" rows="3" required placeholder="Alamat lengkap dan catatan pesanan..."></textarea></div>' +
+          '</form>';
+        foot.innerHTML =
+          '<div style="display:flex;gap:10px;">' +
+            '<button type="button" class="btn btn-secondary" onclick="cartStep=\'cart\';renderCartDrawer();">Kembali</button>' +
+            '<button type="submit" form="checkout-form" class="btn btn-primary" style="flex:1;">Simpan &amp; Lanjut ke WhatsApp</button>' +
+          '</div>';
+      } else if (cartStep === 'confirmed' && lastConfirmedOrder) {
+        title.textContent = 'Pesanan Tercatat';
+        sub.textContent = 'Status awal: Menunggu Konfirmasi';
+        const itemsText = lastConfirmedOrder.items.map((it, idx) =>
+          (idx + 1) + '. ' + it.title + ' (' + it.quantity + 'x @ ' + rupiah(it.price) + ') = ' + rupiah(it.price * it.quantity)
+        ).join('\n');
+        const msg = 'Halo *' + settings.storeName + '*, saya ingin mengonfirmasi pesanan:\n\n' +
+          '*ID Pesanan:* ' + lastConfirmedOrder.id + '\n' +
+          '*Nama:* ' + lastConfirmedOrder.customerName + '\n' +
+          '*WhatsApp:* ' + lastConfirmedOrder.customerWhatsapp + '\n\n' +
+          '*Daftar Buku:*\n' + itemsText + '\n\n' +
+          '*Total:* ' + rupiah(lastConfirmedOrder.totalPrice) + '\n' +
+          '*Catatan/Alamat:* ' + lastConfirmedOrder.notes;
+        const link = waUrl(settings.whatsappNumber, msg);
+
+        body.innerHTML =
+          '<div class="alert-success"><strong>Pesanan Berhasil Disimpan!</strong><br>ID Pesanan <span class="mono"><strong>' + esc(lastConfirmedOrder.id) + '</strong></span> telah masuk ke sistem dengan status <strong>Menunggu Konfirmasi</strong>.</div>' +
+          '<div style="padding:14px;border-radius:12px;background:var(--bg-cream);border:1px solid var(--border-sand);font-size:0.84rem;">' +
+            '<div><strong>Nama:</strong> ' + esc(lastConfirmedOrder.customerName) + '</div>' +
+            '<div><strong>WhatsApp:</strong> ' + esc(lastConfirmedOrder.customerWhatsapp) + '</div>' +
+            '<div><strong>Total:</strong> <span class="tabular">' + rupiah(lastConfirmedOrder.totalPrice) + '</span></div>' +
+            '<div style="margin-top:6px;"><strong>Catatan:</strong> ' + esc(lastConfirmedOrder.notes) + '</div>' +
+          '</div>';
+        foot.innerHTML =
+          '<a id="auto-wa-redirect" href="' + esc(link) + '" target="_blank" rel="noopener noreferrer" class="btn btn-forest" style="width:100%;margin-bottom:8px;">Buka WhatsApp Toko Sekarang</a>' +
+          '<button type="button" class="btn btn-secondary" style="width:100%;" onclick="closeCartDrawer()">Selesai</button>';
+      }
+    }
+
+    function submitCheckout(e) {
+      e.preventDefault();
+      const err = document.getElementById('checkout-err');
+      const name = document.getElementById('co-name').value.trim();
+      const wa = document.getElementById('co-wa').value.trim();
+      const notes = document.getElementById('co-notes').value.trim();
+      const digits = wa.replace(/\D/g, '');
+
+      if (!name || digits.length < 8 || !notes) {
+        err.textContent = 'Pastikan nama, nomor WhatsApp valid (min. 8 digit), dan alamat/catatan telah diisi.';
+        err.classList.remove('hidden');
+        return;
+      }
+
+      const orderItems = [];
+      for (let i = 0; i < cart.length; i++) {
+        const b = books.find(x => x.id === cart[i].bookId);
+        if (!b || b.stock < cart[i].quantity) {
+          err.textContent = 'Stok salah satu buku di keranjang tidak mencukupi.';
+          err.classList.remove('hidden');
+          return;
+        }
+        orderItems.push({ bookId: b.id, title: b.title, author: b.author, price: b.price, quantity: cart[i].quantity });
+      }
+
+      const now = new Date();
+      const id = 'ORD-' + String(now.getFullYear()).slice(-2) + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0') + '-' + Math.floor(100 + Math.random() * 900);
+      const total = orderItems.reduce((s, it) => s + it.price * it.quantity, 0);
+
+      const newOrder = {
+        id: id,
+        customerName: name,
+        customerWhatsapp: wa,
+        notes: notes,
+        items: orderItems,
+        totalPrice: total,
+        status: 'Menunggu Konfirmasi',
+        createdAt: now.toISOString()
+      };
+
+      orders.unshift(newOrder);
+      writeJson(KEYS.ORDERS, orders);
+
+      books = books.map(b => {
+        const ord = orderItems.find(it => it.bookId === b.id);
+        return ord ? Object.assign({}, b, { stock: Math.max(0, b.stock - ord.quantity) }) : b;
+      });
+      writeJson(KEYS.BOOKS, books);
+
+      cart = [];
+      writeJson(KEYS.CART, cart);
+
+      lastConfirmedOrder = newOrder;
+      cartStep = 'confirmed';
+      renderStorefront();
+      renderCartDrawer();
+      showToast('Pesanan ' + id + ' disimpan.');
+      setTimeout(() => {
+        const a = document.getElementById('auto-wa-redirect');
+        if (a) a.click();
+      }, 150);
+    }
+
+    // ==================== DETAIL & PRINT BOOKMARK ====================
+    function openDetailModal(bookId) {
+      const b = books.find(x => x.id === bookId);
+      if (!b) return;
+      const out = b.stock <= 0;
+      document.getElementById('detail-modal-content').innerHTML =
+        '<div class="modal-header">' +
+          '<div><div style="font-size:0.78rem;color:var(--text-muted);">' + esc(b.category) + (b.label ? ' &middot; ' + esc(b.label) : '') + '</div><h2 style="font-size:1.35rem;">' + esc(b.title) + '</h2><p style="font-size:0.86rem;color:var(--text-muted);">oleh ' + esc(b.author) + '</p></div>' +
+          '<button type="button" class="close-btn" onclick="closeDetailModal()">&times;</button>' +
+        '</div>' +
+        '<div class="form-grid" style="grid-template-columns:180px 1fr;">' +
+          '<div class="cover-wrap">' + coverHtml(b) + '</div>' +
+          '<div>' +
+            '<div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:10px;border-bottom:1px solid var(--bg-cream-dark);margin-bottom:12px;">' +
+              '<strong class="serif tabular" style="font-size:1.35rem;">' + rupiah(b.price) + '</strong>' +
+              '<span class="book-stock tabular ' + (out ? 'out' : '') + '">' + (out ? 'Stok Habis' : 'Tersedia ' + b.stock + ' eks') + '</span>' +
+            '</div>' +
+            '<p style="font-size:0.88rem;color:#3B2F2F;margin-bottom:12px;">' + esc(b.description || 'Belum ada deskripsi.') + '</p>' +
+            (b.quote ? '<div style="padding:10px 12px;background:var(--bg-cream);border:1px solid var(--border-sand);border-radius:10px;font-family:Lora,serif;font-style:italic;font-size:0.86rem;margin-bottom:14px;">"' + esc(b.quote) + '"</div>' : '') +
+            '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
+              '<button type="button" class="btn btn-primary" ' + (out ? 'disabled' : '') + ' onclick="addToCart(\'' + esc(b.id) + '\');closeDetailModal();">' + (out ? 'Stok Habis' : '+ Tambah ke Keranjang') + '</button>' +
+              '<button type="button" class="btn btn-secondary" onclick="closeDetailModal();openPrintModal(\'' + esc(b.id) + '\');">Cetak Penanda</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      document.getElementById('detail-backdrop').classList.add('open');
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detail-backdrop').classList.remove('open');
+    }
+
+    function generatePrintableHtml(book, tpl) {
+      if (tpl === 'bookmark') {
+        return '<div class="printable-bookmark">' +
+          '<div><div class="bookmark-hole"></div><div style="text-align:center;border-bottom:1px solid #D7C9B3;padding-bottom:10px;margin-bottom:14px;"><span class="mono" style="font-size:0.7rem;letter-spacing:2px;color:#7A6B5D;">CATATAN BACAAN</span></div>' +
+          '<h2 class="serif" style="text-align:center;font-size:1.2rem;margin-bottom:6px;">' + esc(book.title) + '</h2>' +
+          '<p style="text-align:center;font-size:0.84rem;color:#7A6B5D;margin-bottom:14px;">oleh ' + esc(book.author) + '</p>' +
+          (book.quote ? '<div class="serif" style="font-style:italic;font-size:0.82rem;text-align:center;padding:10px;border-top:1px dashed #D7C9B3;border-bottom:1px dashed #D7C9B3;margin-bottom:14px;">"' + esc(book.quote) + '"</div>' : '') +
+          '</div><div><div class="mono" style="font-size:0.72rem;color:#5C4E43;line-height:1.7;">' +
+            '<div><strong>Kategori:</strong> ' + esc(book.category) + '</div>' +
+            '<div><strong>Harga   :</strong> ' + rupiah(book.price) + '</div>' +
+            '<div><strong>Hal     :</strong> ' + (book.pages ? esc(book.pages) + ' hlm' : '-') + '</div>' +
+          '</div><div class="mono" style="text-align:center;font-size:0.65rem;color:#8C7A6B;margin-top:14px;padding-top:10px;border-top:1px solid #D7C9B3;">THE READING ARCHIVE</div></div></div>';
+      }
+      return '<div class="printable-card">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #3B2F2F;padding-bottom:8px;margin-bottom:14px;"><h3 class="mono" style="font-size:0.95rem;letter-spacing:1.5px;">KARTU ARSIP BUKU</h3><span class="mono" style="font-size:0.76rem;color:#7A6B5D;">NO: ' + esc(book.id.toUpperCase()) + '</span></div>' +
+        '<div style="display:grid;grid-template-columns:120px 1fr;border-bottom:1px solid #D7C9B3;padding:6px 0;font-size:0.86rem;"><span class="mono" style="font-weight:700;color:#7A6B5D;">JUDUL</span><strong class="serif">' + esc(book.title) + '</strong></div>' +
+        '<div style="display:grid;grid-template-columns:120px 1fr;border-bottom:1px solid #D7C9B3;padding:6px 0;font-size:0.86rem;"><span class="mono" style="font-weight:700;color:#7A6B5D;">PENULIS</span><span class="serif">' + esc(book.author) + '</span></div>' +
+        '<div style="display:grid;grid-template-columns:120px 1fr;border-bottom:1px solid #D7C9B3;padding:6px 0;font-size:0.86rem;"><span class="mono" style="font-weight:700;color:#7A6B5D;">KATEGORI</span><span class="serif">' + esc(book.category) + ' &middot; ' + (book.pages ? esc(book.pages) + ' hlm' : '-') + '</span></div>' +
+        '<div style="display:grid;grid-template-columns:120px 1fr;border-bottom:1px solid #D7C9B3;padding:6px 0;font-size:0.86rem;"><span class="mono" style="font-weight:700;color:#7A6B5D;">HARGA</span><span class="serif tabular">' + rupiah(book.price) + '</span></div>' +
+        (book.quote ? '<div class="serif" style="margin-top:12px;padding:10px;background:#FFFDF8;border:1px dashed #B8A992;font-style:italic;font-size:0.84rem;">"' + esc(book.quote) + '"</div>' : '') +
+        '<div class="mono" style="margin-top:16px;display:flex;justify-content:space-between;font-size:0.74rem;color:#7A6B5D;"><span>The Reading Archive</span><span>Paraf: __________</span></div>' +
+      '</div>';
+    }
+
+    function openPrintModal(bookId) {
+      printBookId = bookId;
+      switchPrintTemplate(printTemplate);
+      document.getElementById('print-backdrop').classList.add('open');
+    }
+
+    function closePrintModal() {
+      document.getElementById('print-backdrop').classList.remove('open');
+    }
+
+    function switchPrintTemplate(tpl) {
+      printTemplate = tpl;
+      document.getElementById('btn-tpl-bookmark').className = tpl === 'bookmark' ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary';
+      document.getElementById('btn-tpl-card').className = tpl === 'card' ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary';
+      const b = books.find(x => x.id === printBookId);
+      if (b) document.getElementById('print-preview-stage').innerHTML = generatePrintableHtml(b, tpl);
+    }
+
+    function executePrint() {
+      const b = books.find(x => x.id === printBookId);
+      if (!b) return;
+      document.getElementById('print-only-area').innerHTML = generatePrintableHtml(b, printTemplate);
+      window.print();
+    }
+
+    // ==================== ADMIN DASHBOARD ====================
+    function switchAdminTab(tab) {
+      currentAdminTab = tab;
+      document.querySelectorAll('.sidebar-btn[data-tab]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-tab') === tab);
+      });
+      renderAdminView();
+    }
+
+    function statusClass(st) {
+      if (st === 'Selesai') return 'st-done';
+      if (st === 'Dikirim') return 'st-ship';
+      if (st === 'Diproses') return 'st-proc';
+      if (st === 'Dibatalkan') return 'st-canc';
+      return 'st-wait';
+    }
+
+    function renderAdminView() {
+      if (!isAuthed()) { goToAdmin(); return; }
+      const container = document.getElementById('admin-content');
+      const revenue = orders.filter(o => o.status === 'Selesai').reduce((s, o) => s + o.totalPrice, 0);
+
+      if (currentAdminTab === 'dashboard') {
+        const recent = orders.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
+        container.innerHTML =
+          '<h2 style="font-size:1.7rem;color:var(--admin-forest);margin-bottom:4px;">Dashboard Ringkasan</h2>' +
+          '<p style="font-size:0.88rem;color:#5B6B62;margin-bottom:22px;">Statistik toko buku dan pendapatan bersih dari pesanan berstatus Selesai.</p>' +
+          '<div class="admin-kpi-grid">' +
+            '<div class="kpi-card"><div class="kpi-label">Total Produk</div><div class="kpi-value tabular">' + books.length + '</div><div class="kpi-sub">Judul dalam katalog</div></div>' +
+            '<div class="kpi-card"><div class="kpi-label">Total Kategori</div><div class="kpi-value tabular">' + categories.length + '</div><div class="kpi-sub">Kategori aktif</div></div>' +
+            '<div class="kpi-card"><div class="kpi-label">Total Pesanan</div><div class="kpi-value tabular">' + orders.length + '</div><div class="kpi-sub">' + orders.filter(o => o.status === 'Menunggu Konfirmasi').length + ' menunggu konfirmasi</div></div>' +
+            '<div class="kpi-card highlight"><div class="kpi-label">Total Pendapatan</div><div class="kpi-value tabular">' + rupiah(revenue) + '</div><div class="kpi-sub">Hanya dari pesanan Selesai</div></div>' +
+          '</div>' +
+          '<div class="admin-panel">' +
+            '<div style="padding:14px 18px;border-bottom:1px solid #E7EFEA;display:flex;justify-content:space-between;align-items:center;"><h3 style="font-size:1.05rem;color:var(--admin-forest);">Pesanan Terbaru</h3><button type="button" class="btn btn-sm btn-mint" onclick="switchAdminTab(\'orders\')">Kelola Semua</button></div>' +
+            '<div class="table-scroll"><table><thead><tr><th>ID</th><th>Pelanggan</th><th>Total</th><th>Status</th></tr></thead><tbody>' +
+            (recent.length === 0 ? '<tr><td colspan="4" style="text-align:center;color:#5B6B62;">Belum ada pesanan.</td></tr>' : recent.map(o =>
+              '<tr><td class="mono" style="font-weight:700;">' + esc(o.id) + '</td><td><strong>' + esc(o.customerName) + '</strong><div style="font-size:0.75rem;color:#5B6B62;">' + formatDateTime(o.createdAt) + '</div></td><td class="tabular"><strong>' + rupiah(o.totalPrice) + '</strong></td><td><span class="status-badge ' + statusClass(o.status) + '">' + esc(o.status) + '</span></td></tr>'
+            ).join('')) +
+            '</tbody></table></div>' +
+          '</div>' +
+          '<div class="admin-panel" style="padding:18px;">' +
+            '<h3 style="font-size:1.05rem;color:var(--admin-forest);margin-bottom:12px;">Ringkasan Katalog per Kategori</h3>' +
+            '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">' +
+            categories.map(c => {
+              const cnt = books.filter(b => b.category === c.name).length;
+              return '<div style="padding:12px;border-radius:10px;background:#F8FBF9;border:1px solid #E7EFEA;display:flex;justify-content:space-between;align-items:center;"><strong>' + esc(c.name) + '</strong><span class="tabular" style="color:var(--admin-forest);font-weight:700;">' + cnt + ' buku</span></div>';
+            }).join('') +
+            '</div>' +
+          '</div>';
+      } else if (currentAdminTab === 'products') {
+        container.innerHTML =
+          '<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;">' +
+            '<div><h2 style="font-size:1.7rem;color:var(--admin-forest);">Kelola Produk</h2><p style="font-size:0.86rem;color:#5B6B62;">Perubahan buku langsung diperbarui di katalog utama.</p></div>' +
+            '<button type="button" class="btn btn-forest" onclick="openProductModal()">+ Tambah Buku Baru</button>' +
+          '</div>' +
+          '<div class="admin-panel"><div class="table-scroll"><table><thead><tr><th>Judul &amp; Penulis</th><th>Kategori</th><th>Label</th><th>Harga</th><th>Stok</th><th>Aksi</th></tr></thead><tbody>' +
+          books.map(b =>
+            '<tr><td><strong class="serif">' + esc(b.title) + '</strong><div style="font-size:0.76rem;color:#5B6B62;">' + esc(b.author) + '</div></td><td>' + esc(b.category) + '</td><td>' + esc(b.label || '-') + '</td><td class="tabular"><strong>' + rupiah(b.price) + '</strong></td><td class="tabular">' + b.stock + '</td><td><div style="display:flex;gap:6px;"><button type="button" class="btn btn-sm btn-mint" onclick="openProductModal(\'' + esc(b.id) + '\')">Edit</button><button type="button" class="btn btn-sm btn-danger" onclick="confirmDeleteBook(\'' + esc(b.id) + '\')">Hapus</button></div></td></tr>'
+          ).join('') +
+          '</tbody></table></div></div>';
+      } else if (currentAdminTab === 'categories') {
+        container.innerHTML =
+          '<h2 style="font-size:1.7rem;color:var(--admin-forest);margin-bottom:4px;">Kelola Kategori</h2>' +
+          '<p style="font-size:0.86rem;color:#5B6B62;margin-bottom:18px;">Kategori di sini otomatis memperbarui filter halaman utama.</p>' +
+          '<form onsubmit="addAdminCategory(event)" style="background:#FFF;border:1px solid #D4E2D9;border-radius:14px;padding:16px;display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;">' +
+            '<input type="text" id="new-cat-name" required placeholder="Nama kategori baru..." style="flex:1;min-width:200px;">' +
+            '<button type="submit" class="btn btn-forest">+ Tambah Kategori</button>' +
+          '</form>' +
+          '<div class="admin-panel"><div class="table-scroll"><table><thead><tr><th>Nama Kategori</th><th>Jumlah Buku</th><th>Aksi</th></tr></thead><tbody>' +
+          categories.map(c => {
+            const cnt = books.filter(b => b.category === c.name).length;
+            return '<tr><td><strong>' + esc(c.name) + '</strong></td><td class="tabular">' + cnt + ' buku</td><td><div style="display:flex;gap:6px;"><button type="button" class="btn btn-sm btn-mint" onclick="openEditCategoryModal(\'' + esc(c.id) + '\')">Edit</button><button type="button" class="btn btn-sm btn-danger" onclick="openDeleteCategoryModal(\'' + esc(c.id) + '\')">Hapus</button></div></td></tr>';
+          }).join('') +
+          '</tbody></table></div></div>';
+      } else if (currentAdminTab === 'orders') {
+        const q = orderSearch.trim().toLowerCase();
+        const filtered = orders.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).filter(o => {
+          const mSt = orderStatusFilter === 'Semua' || o.status === orderStatusFilter;
+          const mQ = !q || o.id.toLowerCase().includes(q) || o.customerName.toLowerCase().includes(q) || o.customerWhatsapp.toLowerCase().includes(q);
+          return mSt && mQ;
+        });
+        container.innerHTML =
+          '<h2 style="font-size:1.7rem;color:var(--admin-forest);margin-bottom:4px;">Kelola Pesanan</h2>' +
+          '<p style="font-size:0.86rem;color:#5B6B62;margin-bottom:18px;">Pendapatan hanya dihitung dari pesanan berstatus Selesai.</p>' +
+          '<div style="background:#FFF;border:1px solid #D4E2D9;border-radius:14px;padding:14px;display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;">' +
+            '<input type="text" value="' + esc(orderSearch) + '" placeholder="Cari ID, nama, atau WhatsApp..." oninput="orderSearch=this.value;renderAdminView();" style="flex:1;min-width:200px;">' +
+            '<select onchange="orderStatusFilter=this.value;renderAdminView();" style="width:220px;">' +
+              '<option value="Semua"' + (orderStatusFilter === 'Semua' ? ' selected' : '') + '>Semua Status</option>' +
+              ORDER_STATUSES.map(st => '<option value="' + esc(st) + '"' + (orderStatusFilter === st ? ' selected' : '') + '>' + esc(st) + '</option>').join('') +
+            '</select>' +
+          '</div>' +
+          '<div class="admin-panel"><div class="table-scroll"><table><thead><tr><th>ID</th><th>Pelanggan</th><th>Daftar Buku</th><th>Total</th><th>Tanggal</th><th>Status</th><th>Aksi</th></tr></thead><tbody>' +
+          (filtered.length === 0 ? '<tr><td colspan="7" style="text-align:center;color:#5B6B62;">Tidak ada pesanan.</td></tr>' : filtered.map(o =>
+            '<tr><td class="mono" style="font-weight:700;">' + esc(o.id) + '</td><td><strong>' + esc(o.customerName) + '</strong><div style="font-size:0.75rem;color:#5B6B62;">' + esc(o.customerWhatsapp) + '</div></td><td style="font-size:0.78rem;">' + esc(o.items.map(it => it.title + ' (' + it.quantity + 'x)').join(', ')) + '</td><td class="tabular"><strong>' + rupiah(o.totalPrice) + '</strong></td><td class="tabular" style="font-size:0.76rem;">' + formatDateTime(o.createdAt) + '</td>' +
+            '<td><select class="status-badge ' + statusClass(o.status) + '" onchange="updateOrderStatus(\'' + esc(o.id) + '\', this.value)" style="width:auto;padding:5px 8px;">' +
+              ORDER_STATUSES.map(st => '<option value="' + esc(st) + '"' + (o.status === st ? ' selected' : '') + ' style="background:#fff;color:#1E2B24;">' + esc(st) + '</option>').join('') +
+            '</select></td>' +
+            '<td><div style="display:flex;gap:6px;"><button type="button" class="btn btn-sm btn-mint" onclick="openOrderDetailModal(\'' + esc(o.id) + '\')">Detail</button><button type="button" class="btn btn-sm btn-danger" onclick="confirmDeleteOrder(\'' + esc(o.id) + '\')">Hapus</button></div></td></tr>'
+          ).join('')) +
+          '</tbody></table></div></div>';
+      } else if (currentAdminTab === 'whatsapp') {
+        const activeLink = waUrl(settings.whatsappNumber, 'Halo ' + settings.storeName + ', ini uji tautan WhatsApp toko.');
+        container.innerHTML =
+          '<h2 style="font-size:1.7rem;color:var(--admin-forest);margin-bottom:4px;">Pengaturan WhatsApp</h2>' +
+          '<p style="font-size:0.86rem;color:#5B6B62;margin-bottom:18px;">Nomor ini digunakan untuk seluruh tombol kontak toko dan checkout pelanggan.</p>' +
+          '<div style="background:var(--admin-mint);border:1px solid var(--admin-mint-border);border-radius:14px;padding:18px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">' +
+            '<div><div style="font-size:0.74rem;font-weight:700;text-transform:uppercase;color:#265239;">Nomor Aktif Saat Ini</div><div class="serif tabular" style="font-size:1.5rem;font-weight:700;color:var(--admin-forest);">' + esc(settings.whatsappNumber) + '</div><div class="mono" style="font-size:0.78rem;color:#426652;">Format tautan: https://wa.me/' + waFormat(settings.whatsappNumber) + '</div></div>' +
+            '<a href="' + esc(activeLink) + '" target="_blank" rel="noopener noreferrer" class="btn btn-forest btn-sm">Uji Tautan WhatsApp</a>' +
+          '</div>' +
+          '<form onsubmit="saveWhatsAppSettings(event)" style="background:#FFF;border:1px solid #D4E2D9;border-radius:14px;padding:20px;max-width:540px;">' +
+            '<div class="form-group"><label for="wa-setting-input">Ubah Nomor WhatsApp Toko *</label><input type="tel" id="wa-setting-input" required value="' + esc(settings.whatsappNumber) + '" placeholder="081360450088"></div>' +
+            '<button type="submit" class="btn btn-forest">Simpan Perubahan</button>' +
+          '</form>';
+      }
+    }
+
+    // ==================== ADMIN PRODUCT CRUD ====================
+    function openProductModal(bookId) {
+      const catSelect = document.getElementById('prod-category');
+      catSelect.innerHTML = '<option value="">-- Pilih Kategori --</option>' + categories.map(c => '<option value="' + esc(c.name) + '">' + esc(c.name) + '</option>').join('');
+      document.getElementById('product-form-error').classList.add('hidden');
+      document.getElementById('prod-cover-file').value = '';
+
+      if (bookId) {
+        const b = books.find(x => x.id === bookId);
+        if (!b) return;
+        document.getElementById('product-modal-title').textContent = 'Edit Buku';
+        document.getElementById('prod-id').value = b.id;
+        document.getElementById('prod-title').value = b.title;
+        document.getElementById('prod-author').value = b.author;
+        document.getElementById('prod-category').value = b.category;
+        document.getElementById('prod-price').value = b.price;
+        document.getElementById('prod-stock').value = b.stock;
+        document.getElementById('prod-label').value = b.label || '';
+        document.getElementById('prod-pages').value = b.pages || '';
+        document.getElementById('prod-cover-url').value = b.coverUrl || '';
+        document.getElementById('prod-desc').value = b.description || '';
+        document.getElementById('prod-quote').value = b.quote || '';
+      } else {
+        document.getElementById('product-modal-title').textContent = 'Tambah Buku Baru';
+        document.getElementById('product-form').reset();
+        document.getElementById('prod-id').value = '';
+        if (categories[0]) catSelect.value = categories[0].name;
+      }
+      document.getElementById('product-backdrop').classList.add('open');
+    }
+
+    function closeProductModal() {
+      document.getElementById('product-backdrop').classList.remove('open');
+    }
+
+    function handleCoverUpload(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        const img = new Image();
+        img.onload = function() {
+          const maxW = 420;
+          const scale = img.width > maxW ? maxW / img.width : 1;
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+          document.getElementById('prod-cover-url').value = canvas.toDataURL('image/jpeg', 0.8);
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function saveAdminProduct(e) {
+      e.preventDefault();
+      const err = document.getElementById('product-form-error');
+      const id = document.getElementById('prod-id').value;
+      const title = document.getElementById('prod-title').value.trim();
+      const author = document.getElementById('prod-author').value.trim();
+      const category = document.getElementById('prod-category').value.trim();
+      const price = Number(document.getElementById('prod-price').value);
+      const stock = Number(document.getElementById('prod-stock').value);
+      const pages = Number(document.getElementById('prod-pages').value) || undefined;
+
+      if (!title || !author || !category || !Number.isFinite(price) || price <= 0 || !Number.isInteger(stock) || stock < 0) {
+        err.textContent = 'Periksa kembali: Judul, Penulis, Kategori wajib diisi; Harga > 0; Stok bilangan bulat >= 0.';
+        err.classList.remove('hidden');
+        return;
+      }
+
+      const existing = id ? books.find(b => b.id === id) : null;
+      const data = {
+        id: id || ('bk-' + Date.now()),
+        title: title,
+        author: author,
+        category: category,
+        price: Math.round(price),
+        stock: stock,
+        label: document.getElementById('prod-label').value,
+        pages: pages,
+        coverUrl: document.getElementById('prod-cover-url').value.trim(),
+        description: document.getElementById('prod-desc').value.trim(),
+        quote: document.getElementById('prod-quote').value.trim(),
+        createdAt: existing ? existing.createdAt : new Date().toISOString()
+      };
+
+      if (id) books = books.map(b => b.id === id ? data : b);
+      else books.unshift(data);
+
+      writeJson(KEYS.BOOKS, books);
+      closeProductModal();
+      renderAdminView();
+      showToast(id ? 'Buku berhasil diperbarui.' : 'Buku baru ditambahkan.');
+    }
+
+    function confirmDeleteBook(bookId) {
+      const b = books.find(x => x.id === bookId);
+      if (!b) return;
+      openConfirmModal(
+        'Hapus Buku?',
+        '<p style="font-size:0.88rem;color:#5B6B62;margin-bottom:16px;">Yakin ingin menghapus <strong>"' + esc(b.title) + '"</strong> dari katalog?</p>' +
+        '<div style="display:flex;justify-content:flex-end;gap:8px;"><button type="button" class="btn btn-secondary btn-sm" onclick="closeConfirmModal()">Batal</button><button type="button" class="btn btn-danger-solid btn-sm" onclick="deleteBook(\'' + esc(b.id) + '\')">Ya, Hapus</button></div>'
+      );
+    }
+
+    function deleteBook(bookId) {
+      books = books.filter(b => b.id !== bookId);
+      cart = cart.filter(c => c.bookId !== bookId);
+      writeJson(KEYS.BOOKS, books);
+      writeJson(KEYS.CART, cart);
+      closeConfirmModal();
+      renderAdminView();
+      showToast('Buku berhasil dihapus.');
+    }
+
+    // ==================== ADMIN CATEGORIES ====================
+    function addAdminCategory(e) {
+      e.preventDefault();
+      const inp = document.getElementById('new-cat-name');
+      const name = inp.value.trim();
+      if (!name) return;
+      if (categories.some(c => c.name.toLowerCase() === name.toLowerCase())) {
+        showToast('Kategori tersebut sudah ada.', true);
+        return;
+      }
+      categories.push({ id: 'cat-' + Date.now(), name: name });
+      writeJson(KEYS.CATEGORIES, categories);
+      inp.value = '';
+      renderAdminView();
+      showToast('Kategori "' + name + '" ditambahkan.');
+    }
+
+    function openEditCategoryModal(catId) {
+      const cat = categories.find(c => c.id === catId);
+      if (!cat) return;
+      openConfirmModal(
+        'Edit Kategori',
+        '<form onsubmit="saveEditCategory(event, \'' + esc(cat.id) + '\')"><div class="form-group"><label>Nama Kategori</label><input type="text" id="edit-cat-inp" required value="' + esc(cat.name) + '"></div><div style="display:flex;justify-content:flex-end;gap:8px;"><button type="button" class="btn btn-secondary btn-sm" onclick="closeConfirmModal()">Batal</button><button type="submit" class="btn btn-forest btn-sm">Simpan</button></div></form>'
+      );
+    }
+
+    function saveEditCategory(e, catId) {
+      e.preventDefault();
+      const newName = document.getElementById('edit-cat-inp').value.trim();
+      const cat = categories.find(c => c.id === catId);
+      if (!cat || !newName) return;
+      if (categories.some(c => c.id !== catId && c.name.toLowerCase() === newName.toLowerCase())) {
+        showToast('Nama kategori sudah digunakan.', true);
+        return;
+      }
+      const oldName = cat.name;
+      categories = categories.map(c => c.id === catId ? { id: c.id, name: newName } : c);
+      books = books.map(b => b.category === oldName ? Object.assign({}, b, { category: newName }) : b);
+      writeJson(KEYS.CATEGORIES, categories);
+      writeJson(KEYS.BOOKS, books);
+      closeConfirmModal();
+      renderAdminView();
+      showToast('Kategori diperbarui.');
+    }
+
+    function openDeleteCategoryModal(catId) {
+      const cat = categories.find(c => c.id === catId);
+      if (!cat) return;
+      const usedCount = books.filter(b => b.category === cat.name).length;
+      const remaining = categories.filter(c => c.id !== catId);
+      if (usedCount > 0 && remaining.length === 0) {
+        showToast('Buat kategori lain terlebih dahulu sebelum menghapus kategori terakhir.', true);
+        return;
+      }
+      openConfirmModal(
+        'Hapus Kategori "' + esc(cat.name) + '"?',
+        (usedCount > 0
+          ? '<p style="font-size:0.86rem;color:#8F2D2B;margin-bottom:12px;">Peringatan: Kategori ini digunakan oleh <strong>' + usedCount + ' buku</strong>. Pilih kategori pengganti:</p>' +
+            '<div class="form-group"><select id="reassign-cat-select">' + remaining.map(r => '<option value="' + esc(r.name) + '">' + esc(r.name) + '</option>').join('') + '</select></div>'
+          : '<p style="font-size:0.86rem;color:#5B6B62;margin-bottom:16px;">Kategori ini belum digunakan dan dapat langsung dihapus.</p>') +
+        '<div style="display:flex;justify-content:flex-end;gap:8px;"><button type="button" class="btn btn-secondary btn-sm" onclick="closeConfirmModal()">Batal</button><button type="button" class="btn btn-danger-solid btn-sm" onclick="deleteCategory(\'' + esc(cat.id) + '\')">Ya, Hapus</button></div>'
+      );
+    }
+
+    function deleteCategory(catId) {
+      const cat = categories.find(c => c.id === catId);
+      if (!cat) return;
+      const sel = document.getElementById('reassign-cat-select');
+      if (sel && sel.value) {
+        books = books.map(b => b.category === cat.name ? Object.assign({}, b, { category: sel.value }) : b);
+        writeJson(KEYS.BOOKS, books);
+      }
+      categories = categories.filter(c => c.id !== catId);
+      writeJson(KEYS.CATEGORIES, categories);
+      closeConfirmModal();
+      renderAdminView();
+      showToast('Kategori dihapus.');
+    }
+
+    // ==================== ADMIN ORDERS & WHATSAPP ====================
+    function updateOrderStatus(orderId, status) {
+      orders = orders.map(o => o.id === orderId ? Object.assign({}, o, { status: status }) : o);
+      writeJson(KEYS.ORDERS, orders);
+      renderAdminView();
+      showToast('Status pesanan ' + orderId + ' diubah ke "' + status + '".');
+    }
+
+    function openOrderDetailModal(orderId) {
+      const o = orders.find(x => x.id === orderId);
+      if (!o) return;
+      openConfirmModal(
+        'Detail Pesanan ' + esc(o.id),
+        '<div style="font-size:0.86rem;margin-bottom:14px;">' +
+          '<div><strong>Pelanggan:</strong> ' + esc(o.customerName) + ' (' + esc(o.customerWhatsapp) + ')</div>' +
+          '<div><strong>Tanggal:</strong> ' + formatDateTime(o.createdAt) + '</div>' +
+          '<div><strong>Status:</strong> ' + esc(o.status) + '</div>' +
+          '<div style="margin-top:6px;"><strong>Catatan/Alamat:</strong> ' + esc(o.notes) + '</div>' +
+        '</div>' +
+        '<div style="border:1px solid #D4E2D9;border-radius:10px;padding:12px;margin-bottom:14px;font-size:0.84rem;">' +
+          o.items.map(it => '<div style="display:flex;justify-content:space-between;padding:4px 0;"><span>' + esc(it.title) + ' (' + it.quantity + 'x)</span><strong class="tabular">' + rupiah(it.price * it.quantity) + '</strong></div>').join('') +
+          '<div style="display:flex;justify-content:space-between;padding-top:8px;margin-top:6px;border-top:1px solid #D4E2D9;font-weight:700;"><span>Total</span><span class="tabular">' + rupiah(o.totalPrice) + '</span></div>' +
+        '</div>' +
+        '<div style="display:flex;justify-content:flex-end;"><button type="button" class="btn btn-secondary btn-sm" onclick="closeConfirmModal()">Tutup</button></div>'
+      );
+    }
+
+    function confirmDeleteOrder(orderId) {
+      openConfirmModal(
+        'Hapus Pesanan ' + esc(orderId) + '?',
+        '<p style="font-size:0.86rem;color:#5B6B62;margin-bottom:16px;">Catatan pesanan ini akan dihapus secara permanen.</p>' +
+        '<div style="display:flex;justify-content:flex-end;gap:8px;"><button type="button" class="btn btn-secondary btn-sm" onclick="closeConfirmModal()">Batal</button><button type="button" class="btn btn-danger-solid btn-sm" onclick="deleteOrder(\'' + esc(orderId) + '\')">Ya, Hapus</button></div>'
+      );
+    }
+
+    function deleteOrder(orderId) {
+      orders = orders.filter(o => o.id !== orderId);
+      writeJson(KEYS.ORDERS, orders);
+      closeConfirmModal();
+      renderAdminView();
+      showToast('Pesanan ' + orderId + ' dihapus.');
+    }
+
+    function saveWhatsAppSettings(e) {
+      e.preventDefault();
+      const val = document.getElementById('wa-setting-input').value.trim();
+      if (val.replace(/\D/g, '').length < 8) {
+        showToast('Nomor WhatsApp minimal 8 digit.', true);
+        return;
+      }
+      settings.whatsappNumber = val;
+      writeJson(KEYS.SETTINGS, settings);
+      renderAdminView();
+      syncWhatsAppLinks();
+      showToast('Nomor WhatsApp toko disimpan.');
+    }
+
+    function openConfirmModal(title, bodyHtml) {
+      document.getElementById('confirm-modal-content').innerHTML =
+        '<div class="modal-header"><h3>' + title + '</h3><button type="button" class="close-btn" onclick="closeConfirmModal()">&times;</button></div>' + bodyHtml;
+      document.getElementById('confirm-backdrop').classList.add('open');
+    }
+
+    function closeConfirmModal() {
+      document.getElementById('confirm-backdrop').classList.remove('open');
+    }
+
+    window.addEventListener('hashchange', function() {
+      if (window.location.hash === '#admin') goToAdmin();
+    });
+
+    if (window.location.hash === '#admin') goToAdmin();
+    else renderStorefront();
+  </script>
+</body>
+</html>

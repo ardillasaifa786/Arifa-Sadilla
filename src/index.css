@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-cream: #FAF5EC;
+    --bg-cream-dark: #EFE6D5;
+    --surface-ivory: #FFFDF8;
+    --border-sand: #DFD3BE;
+    --text-espresso: #3B2F2F;
+    --text-muted: #7A6B5D;
+    --accent-terracotta: #9E5A47;
+    --accent-terracotta-hover: #834737;
+    --accent-sage: #5E6F52;
+    --accent-gold: #C89F5D;
+    --admin-forest: #1B362B;
+    --admin-forest-hover: #254A3B;
+    --admin-mint: #EBF3EE;
+    --admin-mint-border: #C8DDD0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-cream);
+    color: var(--text-espresso);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, .font-serif-display {
+    font-family: 'Lora', Georgia, serif;
+  }
+}
+
+.font-serif-book {
+  font-family: 'Lora', Georgia, serif;
+}
+
+.font-archive-mono {
+  font-family: 'Courier Prime', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Printable Bookmark & Library Card Styles (Preserved from Pustaka Cream) */
+#print-only-area {
+  display: none;
+}
+
+@media print {
+  @page {
+    margin: 12mm;
+  }
+  body {
+    background: #FFFFFF !important;
+  }
+  #app-root {
+    display: none !important;
+  }
+  #print-only-area {
+    display: flex !important;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    padding: 16px;
+  }
+  .printable-bookmark,
+  .printable-card {
+    box-shadow: none !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

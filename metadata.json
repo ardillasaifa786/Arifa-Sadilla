@@ -1,0 +1,6 @@
+{
+  "name": "The Reading Archive — Bookstore Management System",
+  "description": "Toko buku independen dan katalog buku bernuansa vintage library dengan Dashboard Admin terintegrasi, manajemen produk, kategori, pesanan, dan checkout WhatsApp.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pustaka Cream — Katalog & Penanda Buku</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-cream: #FAF5EC;
+      --bg-cream-dark: #EFE6D5;
+      --surface-ivory: #FFFDF8;
+      --border-sand: #DFD3BE;
+      --text-espresso: #3B2F2F;
+      --text-muted: #7A6B5D;
+      --accent-terracotta: #9E5A47;
+      --accent-terracotta-hover: #834737;
+      --accent-sage: #5E6F52;
+      --accent-gold: #C89F5D;
+      --shadow-soft: 0 8px 24px rgba(59, 47, 47, 0.06);
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-cream);
+      color: var(--text-espresso);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    h1, h2, h3, .serif {
+      font-family: 'Lora', serif;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding-bottom: 24px;
+      border-bottom: 1.5px solid var(--border-sand);
+      margin-bottom: 28px;
+    }
+
+    .brand h1 {
+      font-size: 2rem;
+      color: var(--text-espresso);
+      letter-spacing: -0.5px;
+    }
+
+    .brand p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 4px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background-color: var(--accent-terracotta);
+      color: #FFFDF8;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-terracotta-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-cream-dark);
+      color: var(--text-espresso);
+      border-color: var(--border-sand);
+    }
+
+    .btn-secondary:hover {
+      background-color: #E5D9C3;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      color: var(--accent-terracotta);
+      border-color: var(--accent-terracotta);
+    }
+
+    .btn-outline:hover {
+      background-color: rgba(158, 90, 71, 0.08);
+    }
+
+    .btn-danger {
+      background-color: transparent;
+      color: #A94442;
+      border-color: #E6C7C6;
+    }
+
+    .btn-danger:hover {
+      background-color: #F9ECEC;
+    }
+
+    .btn-sm {
+      padding: 7px 12px;
+      font-size: 0.82rem;
+      border-radius: 8px;
+    }
+
+    /* Stats & Filter Bar */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--surface-ivory);
+      border: 1px solid var(--border-sand);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .stat-card span {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .stat-card strong {
+      font-family: 'Lora', serif;
+      font-size: 1.75rem;
+      color: var(--text-espresso);
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 28px;
+      align-items: center;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 240px;
+      position: relative;
+    }
+
+    .search-box input, select, input, textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-sand);
+      background-color: var(--surface-ivory);
+      color: var(--text-espresso);
+      font-family: inherit;
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus, select:focus, input:focus, textarea:focus {
+      border-color: var(--accent-terracotta);
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-tab {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border-sand);
+      background: var(--surface-ivory);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-tab.active {
+      background: var(--text-espresso);
+      color: var(--bg-cream);
+      border-color: var(--text-espresso);
+    }
+
+    /* Book Grid */
+    .book-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 20px;
+    }
+
+    .book-card {
+      background: var(--surface-ivory);
+      border: 1px solid var(--border-sand);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease;
+    }
+
+    .book-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .book-meta-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .badge-done {
+      background-color: #E7EFE2;
+      color: var(--accent-sage);
+    }
+
+    .badge-reading {
+      background-color: #F6ECD8;
+      color: #9A712D;
+    }
+
+    .badge-wishlist {
+      background-color: #EFE8DE;
+      color: var(--text-muted);
+    }
+
+    .book-genre {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .book-title {
+      font-size: 1.25rem;
+      line-height: 1.3;
+      margin-bottom: 4px;
+      color: var(--text-espresso);
+    }
+
+    .book-author {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .stars {
+      color: var(--accent-gold);
+      font-size: 0.95rem;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    .book-quote {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 0.88rem;
+      color: #5C4E43;
+      background-color: var(--bg-cream);
+      border-left: 3px solid var(--accent-gold);
+      padding: 10px 12px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 14px;
+    }
+
+    .book-dates {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .book-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding-top: 14px;
+      border-top: 1px dashed var(--border-sand);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--surface-ivory);
+      border: 1.5px dashed var(--border-sand);
+      border-radius: var(--radius);
+      color: var(--text-muted);
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(45, 34, 28, 0.55);
+      backdrop-filter: blur(3px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--surface-ivory);
+      border: 1px solid var(--border-sand);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 560px;
+      padding: 28px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+      max-height: 92vh;
+      overflow-y: auto;
+    }
+
+    .modal-lg {
+      max-width: 720px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      font-size: 0.84rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-espresso);
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    /* Print Preview Area */
+    .template-switcher {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    .preview-stage {
+      background-color: var(--bg-cream-dark);
+      border: 1px dashed var(--border-sand);
+      border-radius: 12px;
+      padding: 28px 16px;
+      display: flex;
+      justify-content: center;
+      overflow-x: auto;
+    }
+
+    /* ==========================================
+       PRINTABLE DESIGNS (Bookmark & Library Card)
+       ========================================== */
+    .printable-bookmark {
+      width: 240px;
+      min-height: 540px;
+      background-color: #FAF5EC;
+      border: 1.5px dashed #8C7A6B;
+      padding: 22px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #3B2F2F;
+      position: relative;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    .bookmark-hole {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1.5px solid #8C7A6B;
+      background-color: #FFFDF8;
+      margin: 0 auto 14px;
+    }
+
+    .bookmark-header {
+      text-align: center;
+      border-bottom: 1px solid #D7C9B3;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+
+    .bookmark-tag {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #7A6B5D;
+    }
+
+    .bookmark-title {
+      font-family: 'Lora', serif;
+      font-size: 1.25rem;
+      line-height: 1.3;
+      margin: 10px 0 6px;
+      text-align: center;
+    }
+
+    .bookmark-author {
+      font-size: 0.85rem;
+      color: #7A6B5D;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .bookmark-stars {
+      text-align: center;
+      color: #C89F5D;
+      font-size: 1rem;
+      letter-spacing: 3px;
+      margin-bottom: 16px;
+    }
+
+    .bookmark-quote {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      text-align: center;
+      padding: 12px 10px;
+      border-top: 1px dashed #D7C9B3;
+      border-bottom: 1px dashed #D7C9B3;
+      margin-bottom: 16px;
+    }
+
+    .bookmark-meta {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.72rem;
+      color: #5C4E43;
+      line-height: 1.7;
+    }
+
+    .bookmark-footer {
+      text-align: center;
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      color: #8C7A6B;
+      margin-top: 16px;
+      padding-top: 10px;
+      border-top: 1px solid #D7C9B3;
+    }
+
+    /* Library Card Design (Horizontal / A6 style) */
+    .printable-card {
+      width: 480px;
+      background-color: #FAF5EC;
+      border: 2px solid #3B2F2F;
+      padding: 24px;
+      color: #3B2F2F;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    .libcard-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 2px solid #3B2F2F;
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+    }
+
+    .libcard-top h3 {
+      font-family: 'Courier Prime', monospace;
+      font-size: 1rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .libcard-top span {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.78rem;
+      color: #7A6B5D;
+    }
+
+    .libcard-row {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      border-bottom: 1px solid #D7C9B3;
+      padding: 7px 0;
+      font-size: 0.88rem;
+    }
+
+    .libcard-label {
+      font-family: 'Courier Prime', monospace;
+      font-weight: 700;
+      color: #7A6B5D;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+    }
+
+    .libcard-val {
+      font-family: 'Lora', serif;
+    }
+
+    .libcard-notes {
+      margin-top: 14px;
+      padding: 12px;
+      background-color: #FFFDF8;
+      border: 1px dashed #B8A992;
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 0.86rem;
+    }
+
+    .libcard-sign {
+      margin-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.75rem;
+      color: #7A6B5D;
+    }
+
+    /* Print Media Handling */
+    #print-only-area {
+      display: none;
+    }
+
+    @media print {
+      @page {
+        margin: 12mm;
+      }
+      body {
+        background: #FFFFFF !important;
+      }
+      #app-wrapper {
+        display: none !important;
+      }
+      #print-only-area {
+        display: flex !important;
+        justify-content: center;
+        align-items: flex-start;
+        width: 100%;
+      }
+      .printable-bookmark, .printable-card {
+        box-shadow: none !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .printable-card {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app-wrapper">
+    <div class="container">
+      <header>
+        <div class="brand">
+          <h1>Pustaka Cream</h1>
+          <p>Katalog bacaan pribadi &amp; pencetak penanda detail buku</p>
+        </div>
+        <button class="btn btn-primary" onclick="openBookModal()">
+          + Tambah Buku
+        </button>
+      </header>
+
+      <!-- Ringkasan -->
+      <section class="stats-row">
+        <div class="stat-card">
+          <span>Total Koleksi</span>
+          <strong id="stat-total">0</strong>
+        </div>
+        <div class="stat-card">
+          <span>Sudah Dibaca</span>
+          <strong id="stat-done">0</strong>
+        </div>
+        <div class="stat-card">
+          <span>Sedang Dibaca</span>
+          <strong id="stat-reading">0</strong>
+        </div>
+      </section>
+
+      <!-- Pencarian & Filter -->
+      <section class="controls">
+        <div class="search-box">
+          <input type="text" id="search-input" placeholder="Cari judul buku atau nama penulis..." oninput="renderBooks()">
+        </div>
+        <div class="filter-tabs">
+          <button class="filter-tab active" onclick="setFilter('Semua', this)">Semua</button>
+          <button class="filter-tab" onclick="setFilter('Sudah Dibaca', this)">Sudah Dibaca</button>
+          <button class="filter-tab" onclick="setFilter('Sedang Dibaca', this)">Sedang Dibaca</button>
+          <button class="filter-tab" onclick="setFilter('Ingin Dibaca', this)">Ingin Dibaca</button>
+        </div>
+      </section>
+
+      <!-- Daftar Buku -->
+      <section id="book-list" class="book-grid"></section>
+    </div>
+
+    <!-- Modal Tambah/Edit Buku -->
+    <div id="book-modal" class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 id="modal-title">Tambah Buku Baru</h2>
+          <button class="modal-close" onclick="closeBookModal()">&times;</button>
+        </div>
+        <form id="book-form" onsubmit="saveBook(event)">
+          <input type="hidden" id="book-id">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="title">Judul Buku *</label>
+              <input type="text" id="title" required placeholder="Contoh: Laut Bercerita">
+            </div>
+            <div class="form-group">
+              <label for="author">Penulis *</label>
+              <input type="text" id="author" required placeholder="Contoh: Leila S. Chudori">
+            </div>
+            <div class="form-group">
+              <label for="genre">Genre / Kategori</label>
+              <input type="text" id="genre" placeholder="Contoh: Fiksi Sejarah">
+            </div>
+            <div class="form-group">
+              <label for="status">Status Baca</label>
+              <select id="status">
+                <option value="Sudah Dibaca">Sudah Dibaca</option>
+                <option value="Sedang Dibaca">Sedang Dibaca</option>
+                <option value="Ingin Dibaca">Ingin Dibaca</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="pages">Jumlah Halaman</label>
+              <input type="number" id="pages" min="1" placeholder="Contoh: 379">
+            </div>
+            <div class="form-group">
+              <label for="startDate">Tanggal Mulai</label>
+              <input type="date" id="startDate">
+            </div>
+            <div class="form-group">
+              <label for="finishDate">Tanggal Selesai</label>
+              <input type="date" id="finishDate">
+            </div>
+            <div class="form-group full">
+              <label for="rating">Penilaian (Rating)</label>
+              <select id="rating">
+                <option value="5">★★★★★ (5/5 - Luar Biasa)</option>
+                <option value="4">★★★★☆ (4/5 - Sangat Bagus)</option>
+                <option value="3">★★★☆☆ (3/5 - Bagus)</option>
+                <option value="2">★★☆☆☆ (2/5 - Cukup)</option>
+                <option value="1">★☆☆☆☆ (1/5 - Kurang)</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label for="quote">Kutipan Favorit / Kesan Singkat</label>
+              <textarea id="quote" rows="3" placeholder="Tuliskan kutipan berkesan atau ulasan singkat yang ingin dicetak di penanda..."></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeBookModal()">Batal</button>
+            <button type="submit" class="btn btn-primary">Simpan Buku</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal Preview & Cetak Penanda -->
+    <div id="print-modal" class="modal-backdrop">
+      <div class="modal modal-lg">
+        <div class="modal-header">
+          <h2>Cetak Penanda Detail Buku</h2>
+          <button class="modal-close" onclick="closePrintModal()">&times;</button>
+        </div>
+
+        <div class="template-switcher">
+          <button class="btn btn-sm btn-primary" id="btn-tpl-bookmark" onclick="switchTemplate('bookmark')">
+            Model Pembatas Buku (Bookmark)
+          </button>
+          <button class="btn btn-sm btn-secondary" id="btn-tpl-card" onclick="switchTemplate('card')">
+            Model Kartu Perpustakaan
+          </button>
+        </div>
+
+        <div class="preview-stage" id="preview-stage"></div>
+
+        <p style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-top: 12px;">
+          Tips: Saat dialog cetak muncul, centang opsi <strong>"Background graphics / Grafis latar belakang"</strong> agar warna cream ikut tercetak indah di kertas.
+        </p>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closePrintModal()">Tutup</button>
+          <button type="button" class="btn btn-primary" onclick="executePrint()">Cetak Sekarang / Simpan PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Area Khusus Print -->
+  <div id="print-only-area"></div>
+
+  <script>
+    const STORAGE_KEY = 'pustaka_cream_books_v1';
+
+    // Data contoh awal agar aplikasi langsung terasa hidup
+    const defaultBooks = [
+      {
+        id: 'bk-1',
+        title: 'Laut Bercerita',
+        author: 'Leila S. Chudori',
+        genre: 'Fiksi Sejarah',
+        status: 'Sudah Dibaca',
+        pages: 379,
+        startDate: '2026-10-02',
+        finishDate: '2026-10-14',
+        rating: 5,
+        quote: 'Matilah engkau mati, kau akan lahir berkali-kali.'
+      },
+      {
+        id: 'bk-2',
+        title: 'Filosofi Teras',
+        author: 'Henry Manampiring',
+        genre: 'Pengembangan Diri',
+        status: 'Sudah Dibaca',
+        pages: 320,
+        startDate: '2026-11-01',
+        finishDate: '2026-11-10',
+        rating: 4,
+        quote: 'Fokus pada hal-hal yang berada di dalam kendali kita sendiri.'
+      },
+      {
+        id: 'bk-3',
+        title: 'Bumi Manusia',
+        author: 'Pramoedya Ananta Toer',
+        genre: 'Sastra Klasik',
+        status: 'Sedang Dibaca',
+        pages: 535,
+        startDate: '2026-11-18',
+        finishDate: '',
+        rating: 5,
+        quote: 'Seorang terpelajar harus juga berlaku adil sejak dalam pikiran apalagi dalam perbuatan.'
+      }
+    ];
+
+    let books = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultBooks;
+    let currentFilter = 'Semua';
+    let currentPrintBookId = null;
+    let currentTemplate = 'bookmark';
+
+    function saveToStorage() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function renderStars(count) {
+      const n = Number(count) || 0;
+      return '★'.repeat(n) + '☆'.repeat(5 - n);
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '-';
+      const d = new Date(dateStr + 'T00:00:00');
+      return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function setFilter(status, btn) {
+      currentFilter = status;
+      document.querySelectorAll('.filter-tab').forEach(el => el.classList.remove('active'));
+      btn.classList.add('active');
+      renderBooks();
+    }
+
+    function updateStats() {
+      document.getElementById('stat-total').textContent = books.length;
+      document.getElementById('stat-done').textContent = books.filter(b => b.status === 'Sudah Dibaca').length;
+      document.getElementById('stat-reading').textContent = books.filter(b => b.status === 'Sedang Dibaca').length;
+    }
+
+    function renderBooks() {
+      updateStats();
+      const query = document.getElementById('search-input').value.toLowerCase().trim();
+      const container = document.getElementById('book-list');
+
+      const filtered = books.filter(book => {
+        const matchStatus = currentFilter === 'Semua' || book.status === currentFilter;
+        const matchQuery = book.title.toLowerCase().includes(query) || book.author.toLowerCase().includes(query);
+        return matchStatus && matchQuery;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state" style="grid-column: 1 / -1;">
+            <h3>Belum ada buku ditemukan</h3>
+            <p style="margin-top: 6px;">Klik "+ Tambah Buku" untuk mulai mengisi katalog bacaanmu.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(book => {
+        let badgeClass = 'badge-wishlist';
+        if (book.status === 'Sudah Dibaca') badgeClass = 'badge-done';
+        if (book.status === 'Sedang Dibaca') badgeClass = 'badge-reading';
+
+        return `
+          <article class="book-card">
+            <div>
+              <div class="book-meta-top">
+                <span class="badge ${badgeClass}">${escapeHtml(book.status)}</span>
+                <span class="book-genre">${escapeHtml(book.genre || 'Umum')}</span>
+              </div>
+              <h3 class="book-title">${escapeHtml(book.title)}</h3>
+              <p class="book-author">oleh ${escapeHtml(book.author)}</p>
+              <div class="stars">${renderStars(book.rating)}</div>
+              ${book.quote ? `<div class="book-quote">"${escapeHtml(book.quote)}"</div>` : ''}
+              <div class="book-dates">
+                ${book.pages ? `${escapeHtml(book.pages)} halaman &bull; ` : ''}
+                Selesai: ${formatDate(book.finishDate)}
+              </div>
+            </div>
+            <div class="book-actions">
+              <button class="btn btn-sm btn-outline" onclick="openPrintModal('${book.id}')">
+                Cetak Penanda
+              </button>
+              <button class="btn btn-sm btn-secondary" onclick="editBook('${book.id}')">
+                Edit
+              </button>
+              <button class="btn btn-sm btn-danger" onclick="deleteBook('${book.id}')">
+                Hapus
+              </button>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    // Modal Tambah/Edit
+    function openBookModal() {
+      document.getElementById('book-form').reset();
+      document.getElementById('book-id').value = '';
+      document.getElementById('modal-title').textContent = 'Tambah Buku Baru';
+      document.getElementById('book-modal').classList.add('open');
+    }
+
+    function closeBookModal() {
+      document.getElementById('book-modal').classList.remove('open');
+    }
+
+    function editBook(id) {
+      const book = books.find(b => b.id === id);
+      if (!book) return;
+      document.getElementById('book-id').value = book.id;
+      document.getElementById('title').value = book.title;
+      document.getElementById('author').value = book.author;
+      document.getElementById('genre').value = book.genre || '';
+      document.getElementById('status').value = book.status;
+      document.getElementById('pages').value = book.pages || '';
+      document.getElementById('startDate').value = book.startDate || '';
+      document.getElementById('finishDate').value = book.finishDate || '';
+      document.getElementById('rating').value = book.rating || 5;
+      document.getElementById('quote').value = book.quote || '';
+      document.getElementById('modal-title').textContent = 'Edit Informasi Buku';
+      document.getElementById('book-modal').classList.add('open');
+    }
+
+    function saveBook(e) {
+      e.preventDefault();
+      const id = document.getElementById('book-id').value;
+      const bookData = {
+        id: id || 'bk-' + Date.now(),
+        title: document.getElementById('title').value.trim(),
+        author: document.getElementById('author').value.trim(),
+        genre: document.getElementById('genre').value.trim(),
+        status: document.getElementById('status').value,
+        pages: document.getElementById('pages').value,
+        startDate: document.getElementById('startDate').value,
+        finishDate: document.getElementById('finishDate').value,
+        rating: Number(document.getElementById('rating').value),
+        quote: document.getElementById('quote').value.trim()
+      };
+
+      if (id) {
+        const index = books.findIndex(b => b.id === id);
+        if (index !== -1) books[index] = bookData;
+      } else {
+        books.unshift(bookData);
+      }
+
+      saveToStorage();
+      closeBookModal();
+      renderBooks();
+    }
+
+    function deleteBook(id) {
+      if (!confirm('Yakin ingin menghapus buku ini dari katalog?')) return;
+      books = books.filter(b => b.id !== id);
+      saveToStorage();
+      renderBooks();
+    }
+
+    // Fitur Cetak Penanda / Kartu Detail Buku
+    function generatePrintableHtml(book, template) {
+      if (template === 'bookmark') {
+        return `
+          <div class="printable-bookmark">
+            <div>
+              <div class="bookmark-hole"></div>
+              <div class="bookmark-header">
+                <div class="bookmark-tag">Catatan Bacaan</div>
+              </div>
+              <h2 class="bookmark-title">${escapeHtml(book.title)}</h2>
+              <p class="bookmark-author">oleh ${escapeHtml(book.author)}</p>
+              <div class="bookmark-stars">${renderStars(book.rating)}</div>
+              ${book.quote ? `<div class="bookmark-quote">"${escapeHtml(book.quote)}"</div>` : ''}
+            </div>
+            <div>
+              <div class="bookmark-meta">
+                <div><strong>Status :</strong> ${escapeHtml(book.status)}</div>
+                <div><strong>Genre  :</strong> ${escapeHtml(book.genre || '-')}</div>
+                <div><strong>Hal    :</strong> ${book.pages ? escapeHtml(book.pages) + ' hlm' : '-'}</div>
+                <div><strong>Mulai  :</strong> ${formatDate(book.startDate)}</div>
+                <div><strong>Selesai:</strong> ${formatDate(book.finishDate)}</div>
+              </div>
+              <div class="bookmark-footer">
+                PUSTAKA CREAM &bull; ARSIP PRIBADI
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        return `
+          <div class="printable-card">
+            <div class="libcard-top">
+              <h3>Kartu Arsip Buku</h3>
+              <span>NO: ${escapeHtml(book.id.toUpperCase())}</span>
+            </div>
+            <div class="libcard-row">
+              <div class="libcard-label">Judul Buku</div>
+              <div class="libcard-val"><strong>${escapeHtml(book.title)}</strong></div>
+            </div>
+            <div class="libcard-row">
+              <div class="libcard-label">Penulis</div>
+              <div class="libcard-val">${escapeHtml(book.author)}</div>
+            </div>
+            <div class="libcard-row">
+              <div class="libcard-label">Genre / Hal</div>
+              <div class="libcard-val">${escapeHtml(book.genre || '-')} &bull; ${book.pages ? escapeHtml(book.pages) + ' halaman' : '-'}</div>
+            </div>
+            <div class="libcard-row">
+              <div class="libcard-label">Periode Baca</div>
+              <div class="libcard-val">${formatDate(book.startDate)} s.d. ${formatDate(book.finishDate)}</div>
+            </div>
+            <div class="libcard-row">
+              <div class="libcard-label">Status &amp; Nilai</div>
+              <div class="libcard-val">${escapeHtml(book.status)} &nbsp; <span style="color:#C89F5D;">${renderStars(book.rating)}</span></div>
+            </div>
+            ${book.quote ? `<div class="libcard-notes">"${escapeHtml(book.quote)}"</div>` : ''}
+            <div class="libcard-sign">
+              <span>Dicetak dari Pustaka Cream</span>
+              <span>Paraf Pembaca: ____________</span>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function openPrintModal(id) {
+      currentPrintBookId = id;
+      renderPrintPreview();
+      document.getElementById('print-modal').classList.add('open');
+    }
+
+    function closePrintModal() {
+      document.getElementById('print-modal').classList.remove('open');
+    }
+
+    function switchTemplate(tpl) {
+      currentTemplate = tpl;
+      document.getElementById('btn-tpl-bookmark').className = tpl === 'bookmark' ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary';
+      document.getElementById('btn-tpl-card').className = tpl === 'card' ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary';
+      renderPrintPreview();
+    }
+
+    function renderPrintPreview() {
+      const book = books.find(b => b.id === currentPrintBookId);
+      if (!book) return;
+      document.getElementById('preview-stage').innerHTML = generatePrintableHtml(book, currentTemplate);
+    }
+
+    function executePrint() {
+      const book = books.find(b => b.id === currentPrintBookId);
+      if (!book) return;
+      document.getElementById('print-only-area').innerHTML = generatePrintableHtml(book, currentTemplate);
+      window.print();
+    }
+
+    // Inisialisasi awal
+    renderBooks();
+  </script>
+</body>
+</html>
